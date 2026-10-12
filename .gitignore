@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Playwright CLI output (may contain credentials)
+.playwright-cli/
+
+
+# Fichiers temporaires de Blender (scripts d export)
+waveletNoiseTile.bin
