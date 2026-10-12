@@ -97,15 +97,6 @@ export const models: Model[] = [
     key: "#9fd4ff",
   },
   {
-    slug: "pingouin",
-    name: "Pingouin",
-    file: "/models/pingouin2.glb",
-    year: 2024,
-    caption: "Personnage stylisé, formes douces et matières mates.",
-    rotation: [0.05, -0.35, 0],
-    key: "#9fd4ff",
-  },
-  {
     slug: "chateau",
     name: "Château de sable",
     file: "/models/chateau_de_sable.glb",
@@ -122,15 +113,6 @@ export const models: Model[] = [
     caption: "Lame, garde et poignée tressée le long d'une courbe.",
     rotation: [0, -0.3, 0],
     key: "#c9d6ff",
-  },
-  {
-    slug: "talisman",
-    name: "Talisman",
-    file: "/models/talisman.glb",
-    year: 2024,
-    caption: "Amulette en coque épaisse, un exercice de solidify et de matières.",
-    rotation: [0.1, -0.3, 0],
-    key: "#ff7a3d",
   },
   {
     slug: "gemme",
