@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" font-family="Geist, Inter, system-ui, sans-serif">
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="8%" r="80%">
+      <stop offset="0" stop-color="#ff7a3d" stop-opacity=".32"/>
+      <stop offset=".45" stop-color="#8b7cf6" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#050506" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bar" x1="0" x2="1">
+      <stop offset="0" stop-color="#ff7a3d"/>
+      <stop offset="1" stop-color="#ffb07a"/>
+    </linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141418"/>
+      <stop offset="1" stop-color="#0c0c0f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#08080a"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+
+  <!-- Fenêtre de l'application -->
+  <g transform="translate(150 110)">
+    <rect width="1300" height="830" rx="18" fill="url(#win)" stroke="#2a2a30"/>
+    <circle cx="32" cy="30" r="6" fill="#3a3a40"/><circle cx="54" cy="30" r="6" fill="#3a3a40"/><circle cx="76" cy="30" r="6" fill="#3a3a40"/>
+    <text x="650" y="35" fill="#5d6068" font-size="15" text-anchor="middle" letter-spacing="1">CHROMA BUDDY</text>
+    <line x1="0" y1="60" x2="1300" y2="60" stroke="#222227"/>
+
+    <!-- Barre latérale -->
+    <g fill="#9a9ca3" font-size="17">
+      <rect x="20" y="88" width="210" height="44" rx="8" fill="#1d1d22"/>
+      <text x="44" y="116" fill="#f2f2f0">Debrief</text>
+      <text x="44" y="172">Parties</text>
+      <text x="44" y="220">Progression</text>
+      <text x="44" y="268">Coach</text>
+      <text x="44" y="316">Réglages</text>
+    </g>
+    <line x1="250" y1="60" x2="250" y2="830" stroke="#222227"/>
+
+    <!-- En-tête du debrief -->
+    <text x="290" y="120" fill="#5d6068" font-size="14" letter-spacing="2">PARTIE 14 · WORLD'S EDGE · 18 MIN</text>
+    <text x="290" y="178" fill="#f2f2f0" font-size="46" font-weight="500" letter-spacing="-1.5">Top 3, belle partie.</text>
+
+    <!-- Statistiques -->
+    <g font-size="14" fill="#5d6068" letter-spacing="1.5">
+      <g transform="translate(290 220)">
+        <rect width="230" height="120" rx="12" fill="#121216" stroke="#24242a"/>
+        <text x="22" y="36">KILLS</text>
+        <text x="22" y="92" fill="#f2f2f0" font-size="48" letter-spacing="-1.5">7</text>
+      </g>
+      <g transform="translate(540 220)">
+        <rect width="230" height="120" rx="12" fill="#121216" stroke="#24242a"/>
+        <text x="22" y="36">DÉGÂTS</text>
+        <text x="22" y="92" fill="#f2f2f0" font-size="48" letter-spacing="-1.5">2 184</text>
+      </g>
+      <g transform="translate(790 220)">
+        <rect width="230" height="120" rx="12" fill="#121216" stroke="#24242a"/>
+        <text x="22" y="36">ASSISTANCES</text>
+        <text x="22" y="92" fill="#f2f2f0" font-size="48" letter-spacing="-1.5">4</text>
+      </g>
+      <g transform="translate(1040 220)">
+        <rect width="220" height="120" rx="12" fill="#121216" stroke="#24242a"/>
+        <text x="22" y="36">ULTIME</text>
+        <text x="22" y="92" fill="#ff7a3d" font-size="48" letter-spacing="-1.5">×2</text>
+      </g>
+    </g>
+
+    <!-- Frise des combats -->
+    <text x="290" y="400" fill="#5d6068" font-size="14" letter-spacing="2">COMBATS</text>
+    <rect x="290" y="420" width="970" height="6" rx="3" fill="#1d1d22"/>
+    <rect x="290" y="420" width="760" height="6" rx="3" fill="url(#bar)"/>
+    <g fill="#f2f2f0">
+      <circle cx="372" cy="423" r="9"/><circle cx="520" cy="423" r="9"/>
+      <circle cx="688" cy="423" r="9" fill="#ff7a3d"/><circle cx="842" cy="423" r="9"/>
+      <circle cx="1004" cy="423" r="9" fill="#ff7a3d"/>
+    </g>
+    <g font-size="13" fill="#5d6068">
+      <text x="372" y="458" text-anchor="middle">02:14</text><text x="520" y="458" text-anchor="middle">05:40</text>
+      <text x="688" y="458" text-anchor="middle">09:02</text><text x="842" y="458" text-anchor="middle">12:31</text>
+      <text x="1004" y="458" text-anchor="middle">16:48</text>
+    </g>
+
+    <!-- Conseils -->
+    <g transform="translate(290 500)">
+      <rect width="970" height="130" rx="14" fill="#121216" stroke="#2c2620"/>
+      <rect x="0" y="0" width="4" height="130" rx="2" fill="#ff7a3d"/>
+      <text x="32" y="44" fill="#ff7a3d" font-size="14" letter-spacing="2">À TRAVAILLER</text>
+      <text x="32" y="82" fill="#f2f2f0" font-size="22">Deux combats engagés de dos à 09:02 et 16:48.</text>
+      <text x="32" y="112" fill="#9a9ca3" font-size="17">Vérifie l'indicateur de direction des dégâts avant de te retourner.</text>
+    </g>
+    <g transform="translate(290 650)">
+      <rect width="970" height="130" rx="14" fill="#121216" stroke="#24242a"/>
+      <text x="32" y="44" fill="#9a9ca3" font-size="14" letter-spacing="2">BIEN JOUÉ</text>
+      <text x="32" y="82" fill="#f2f2f0" font-size="22">Ultime gardé pour le combat final, puis utilisé au bon moment.</text>
+      <text x="32" y="112" fill="#9a9ca3" font-size="17">Source : base de connaissances, fiche « Gestion des ultimes ».</text>
+    </g>
+  </g>
+</svg>
