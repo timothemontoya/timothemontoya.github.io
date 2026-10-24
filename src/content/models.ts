@@ -43,6 +43,8 @@ export const models: Model[] = ([
     year: 2023,
     rotation: [0.08, -0.5, 0],
     key: "#ffc27a",
+    // Textures retirées (scripts/strip-textures.mjs) : rendu mat façon maquette.
+    studio: true,
   },
   {
     slug: "robot",
