@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
   // L'optimisation d'images de Next.js demande un serveur : les images sont servies telles quelles.
   images: { unoptimized: true },
   env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  // En développement : autorise l'accès depuis le réseau local (ex : http://192.168.1.96:3000,
+  // ou un téléphone sur le même Wi-Fi). Sans effet sur le site en ligne.
+  allowedDevOrigins: ["192.168.1.*"],
   turbopack: {
     rules: {
       "*.css": {
