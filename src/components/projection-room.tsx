@@ -13,6 +13,7 @@ import { fitDistance } from "@/lib/fit-distance";
 import { useReducedMotion } from "@/lib/use-media";
 import { Model, preloadModel } from "./three/model";
 import { Studio } from "./three/studio";
+import { t } from "@/content/textes";
 
 /** Durée de la sortie d'un modèle avant l'entrée du suivant, en secondes. */
 const SWAP = 0.45;
@@ -221,7 +222,7 @@ export function ProjectionRoom({ className, heading }: Props) {
               <p className="mt-2 text-sm text-fg-2 text-pretty md:text-base">{info.caption}</p>
             </motion.div>
           </AnimatePresence>
-          <p className="label hidden shrink-0 text-fg-3 md:block">Glisser pour tourner · ← →</p>
+          <p className="label hidden shrink-0 text-fg-3 md:block">{t("salle.aide")}</p>
         </div>
       </div>
 

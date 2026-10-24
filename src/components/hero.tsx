@@ -13,6 +13,7 @@ import { usePointer } from "@/lib/use-pointer";
 import { useReducedMotion } from "@/lib/use-media";
 import { Model } from "./three/model";
 import { Studio } from "./three/studio";
+import { t } from "@/content/textes";
 
 const hero = models.find((m) => m.slug === "tie") ?? models[0];
 
@@ -123,16 +124,18 @@ export function Hero() {
               {site.role} · {site.city}
             </p>
             <h1 className="display mt-5 text-[clamp(3.5rem,11vw,10rem)]">
-              Timothé
-              <br />
-              Montoya
+              {site.name.split(" ").map((word, i) => (
+                <span key={i} className="block">
+                  {word}
+                </span>
+              ))}
             </h1>
           </motion.div>
 
           <Beat progress={scrollYProgress} range={[0.22, 0.32, 0.5, 0.6]} className="absolute inset-x-gutter bottom-[22vh] max-w-xl">
-            <p className="label text-ember">01 — Code</p>
+            <p className="label text-ember">{t("accueil.phrase1.etiquette")}</p>
             <p className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-medium leading-[0.98] tracking-[-0.035em]">
-              Je construis des logiciels qui voient, comprennent et répondent.
+              {t("accueil.phrase1")}
             </p>
           </Beat>
 
@@ -141,14 +144,14 @@ export function Hero() {
             range={[0.62, 0.72, 0.92, 1]}
             className="absolute bottom-[22vh] right-gutter max-w-xl text-right"
           >
-            <p className="label text-ember">02 — 3D</p>
+            <p className="label text-ember">{t("accueil.phrase2.etiquette")}</p>
             <p className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-medium leading-[0.98] tracking-[-0.035em]">
-              Et des mondes en 3D, éclairés comme des plans de film.
+              {t("accueil.phrase2")}
             </p>
           </Beat>
 
           <motion.p style={{ opacity: cueOpacity }} className="label absolute bottom-8 right-gutter text-fg-3">
-            Défiler ↓
+            {t("accueil.defiler")}
           </motion.p>
         </div>
       </div>

@@ -1,11 +1,11 @@
-// Informations générales du site.
+import { t } from "./textes";
+
+// Informations générales du site. Les textes sont dans TEXTES.txt (section « Informations générales »).
 export const site = {
-  name: "Timothé Montoya",
-  role: "Ingénieur logiciel & artiste 3D",
-  school: "ENSEEIHT — Sciences du Numérique",
-  city: "Toulouse",
-  pitch:
-    "Étudiant ingénieur à l'N7, je construis des logiciels et des mondes en 3D. Du moteur de jeu en Java au coach IA qui lit l'écran d'Apex Legends, en passant par des scènes Blender pensées comme des plans de film.",
+  name: t("site.nom"),
+  role: t("site.metier"),
+  city: t("site.ville"),
+  pitch: t("site.presentation"),
   links: {
     email: "timothemontoya@gmail.com",
     github: "https://github.com/timothemontoya",

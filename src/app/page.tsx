@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero";
 import { ProjectionRoom } from "@/components/projection-room";
 import { ProjectsSection } from "@/components/projects-section";
 import { RenderGallery } from "@/components/render-gallery";
+import { t } from "@/content/textes";
 
 export default function Home() {
   return (
@@ -13,9 +14,9 @@ export default function Home() {
         <ProjectionRoom
           heading={{
             id: "salle-titre",
-            kicker: "Temps réel",
-            title: "Salle de projection",
-            text: "Mes modèles Blender, chargés directement dans le navigateur. Choisis-en un, attrape-le, fais-le tourner.",
+            kicker: t("salle.etiquette"),
+            title: t("salle.titre"),
+            text: t("salle.texte"),
           }}
         />
       </section>
