@@ -25,15 +25,14 @@
 Timothé Montoya
 
 [site.metier]
-Ingénieur logiciel & artiste 3D
+Étudiant en informatique à l'ENSEEIHT
 
 [site.ville]
 Toulouse
 
 [site.presentation]
-Étudiant ingénieur à l'N7, je construis des logiciels et des mondes en 3D. Du
-moteur de jeu en Java au coach IA qui lit l'écran d'Apex Legends, en passant par
-des scènes Blender pensées comme des plans de film.
+Étudiant ingénieur à l'N7, j'aime construire : des mondes en 3D, des logiciels,
+des sites et des applis web, bref tout ce qui touche à l'informatique.
 
 
 # ─── Menu (en haut de chaque page) ──────────────────────────────────────────
@@ -57,7 +56,7 @@ Contact
 01 — Code
 
 [accueil.phrase1]
-Je construis des logiciels qui voient, comprennent et répondent.
+Je code des logiciels, des sites et des applis, du jeu vidéo au coach IA.
 
 [accueil.phrase2.etiquette]
 02 — 3D
@@ -109,13 +108,13 @@ Personnage robot articulé, modélisé pièce par pièce.
 Chaudron
 
 [modele.chaudron.legende]
-Chaudron de sorcière stylisé, louche et bocaux sur des dalles taillées.
+Chaudron de sorcière stylisé, louche et bocaux sur des dalles taillées, inspiré d'un tutoriel YouTube.
 
 [modele.pigeon.nom]
 Pigeon urbain
 
 [modele.pigeon.legende]
-Sculpture organique d'un pigeon de ville, pensée pour un rendu tournant.
+Sculpture organique d'un pigeon de ville, pensée pour être vue de face.
 
 [modele.guitare.nom]
 Guitare
@@ -163,7 +162,7 @@ Library Blender
 Rendus
 
 [rendus.texte]
-Lumière, brouillard, cadrage. Chaque image est pensée comme un plan de film.
+Lumière, brouillard, cadrage. Chaque rendu cherche son ambiance, épique ou décalée.
 Clique pour voir en grand.
 
 [rendus.vues]
@@ -176,7 +175,7 @@ vues
 Nébuleuse
 
 [rendu.nebuleuse.note]
-Casque NASA, HUD animé, volumétrie
+Casque NASA créé sur mesure, HUD animé, volumétrie
 
 [rendu.seuil.titre]
 Le seuil
@@ -188,7 +187,7 @@ Architecture, brouillard, post-production
 Chambre 2009
 
 [rendu.chambre.note]
-Intérieur, mise en scène d'objets
+Intérieur, mise en scène d'objets importés
 
 [rendu.chaudron.titre]
 Chaudron
@@ -206,7 +205,7 @@ Couloir, lumière volumétrique
 Égouts
 
 [rendu.egouts.note]
-Grille, lave, ambiance horrifique
+Grille, lave, ambiance mystérieuse
 
 [rendu.liminal.titre]
 Espaces liminaux
@@ -269,8 +268,8 @@ Accessoire cartoon
 Évolution
 
 [evolution.texte]
-Du premier objet posé sur un fond gris aux scènes éclairées comme des plans de
-film : mes rendus dans l'ordre où je les ai faits.
+Du premier objet posé sur un fond gris aux scènes stylisées, éclairées et
+retouchées en post-traitement : mes rendus dans l'ordre où je les ai faits.
 
 [evolution.avant]
 avant
@@ -303,8 +302,8 @@ Coach IA pour jeux vidéo
 En cours
 
 [projet.chroma-buddy.resume]
-Une application de bureau qui regarde ta partie d'Apex Legends par capture
-d'écran, comprend ce qui se passe et te livre un debrief clair après chaque
+Une application de bureau qui regarde ta partie, sur le jeu de ton choix, par
+capture d'écran, comprend ce qui se passe et te livre un debrief clair après chaque
 match. Sans toucher au jeu, donc compatible anti-cheat.
 
 [projet.chroma-buddy.role]
@@ -586,7 +585,7 @@ Projet suivant
 À propos
 
 [apropos.texte]
-En dehors du code : musique, jeux vidéo et beaucoup d'heures dans Blender. C'est
+En dehors du code : musique, jeux vidéo, natation et beaucoup d'heures dans Blender. C'est
 souvent de là que viennent les idées de projets.
 
 [apropos.parcours.titre]
@@ -641,7 +640,7 @@ Contact
 On en parle
 
 [contact.texte]
-Stage, alternance, projet 3D ou simple question : je réponds à tous les messages.
+Stage, projet 3D ou simple question : je réponds à tous les messages.
 
 [contact.pied]
-Modèles 3D en temps réel · Three.js
+Fait main à Toulouse, entre Blender et VS Code
