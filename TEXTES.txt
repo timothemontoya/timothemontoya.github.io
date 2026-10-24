@@ -96,7 +96,7 @@ Chasseur impérial modélisé en hard-surface : miroir, biseaux et grille en wir
 Sanctuaire
 
 [modele.maison.legende]
-Maison à colombages pensée comme un asset de jeu : toit courbé, bois texturé.
+Maison à colombages pensée comme un asset de jeu : toit courbé, charpente sculptée.
 
 [modele.robot.nom]
 Robot
@@ -194,12 +194,6 @@ Chaudron
 
 [rendu.chaudron.note]
 Stylisé, lumières colorées
-
-[rendu.porte.titre]
-La porte
-
-[rendu.porte.note]
-Couloir, lumière volumétrique
 
 [rendu.egouts.titre]
 Égouts

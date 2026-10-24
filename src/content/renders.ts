@@ -42,7 +42,6 @@ export const renders: Render[] = ([
   { id: "seuil", date: "2026-06", approx: true, shots: [img("/renders/donjon.jpg", 1168 / 1652)] },
   { id: "chambre", date: "2026-09", approx: true, shots: [img("/renders/chambre-retro.jpg", 1)] },
   { id: "chaudron", date: "2021-10", shots: [img("/renders/chaudron.jpg", 1)] },
-  { id: "porte", date: "2025-10", shots: [img("/renders/porte.jpg", 832 / 1800)] },
   { id: "egouts", date: "2021-09", shots: [img("/renders/egouts.jpg", 1)] },
   {
     id: "liminal", date: "2026-09", approx: true,
