@@ -2,18 +2,19 @@ import Link from "next/link";
 import { projects } from "@/content/projects";
 import { Media } from "./media";
 import { Reveal } from "./reveal";
+import { t } from "@/content/textes";
 
 export function ProjectsSection() {
   return (
     <section id="projets" data-snap aria-labelledby="projets-titre" className="mx-auto max-w-content px-gutter py-32 md:py-48">
       <Reveal className="flex items-end justify-between gap-8">
         <div>
-          <p className="label text-fg-3">Code &amp; recherche</p>
+          <p className="label text-fg-3">{t("projets.etiquette")}</p>
           <h2 id="projets-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
-            Projets
+            {t("projets.titre")}
           </h2>
         </div>
-        <p className="label hidden text-fg-3 md:block">{String(projects.length).padStart(2, "0")} projets</p>
+        <p className="label hidden text-fg-3 md:block">{String(projects.length).padStart(2, "0")} {t("projets.compteur")}</p>
       </Reveal>
 
       <ol className="mt-16 flex flex-col gap-24 md:mt-24 md:gap-40">
@@ -48,7 +49,7 @@ export function ProjectsSection() {
                     ))}
                   </ul>
                   <span className="mt-8 inline-flex items-center gap-2 text-sm text-fg transition-[gap] duration-500 group-hover:gap-4">
-                    Voir le projet <span aria-hidden>→</span>
+                    {t("projets.voir")} <span aria-hidden>→</span>
                   </span>
                 </div>
               </Link>

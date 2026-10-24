@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },
+      // TEXTES.txt est lu comme une simple chaîne de caractères (voir src/content/textes.ts).
+      "*.txt": {
+        loaders: ["raw-loader"],
+        as: "*.js",
+      },
     },
   },
 };

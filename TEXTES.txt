@@ -1,0 +1,647 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  TEXTES DU SITE
+#
+#  Tout le texte visible du portfolio est ici. Pour le changer :
+#    1. modifie le texte SOUS une balise [comme.ceci]
+#    2. enregistre : avec « npm run dev », la page se met à jour toute seule
+#    3. pour le site en ligne : commit + push (ou « Synchroniser » dans VS Code)
+#
+#  Règles :
+#    - ne renomme pas et ne supprime pas les balises entre crochets
+#    - le texte d'une balise va jusqu'à la balise suivante
+#    - plusieurs lignes à la suite sont collées en une seule phrase
+#    - une ligne vide sépare deux paragraphes
+#    - les lignes qui commencent par # sont des commentaires (ignorées)
+#    - pour les listes (technologies, outils…), sépare les éléments par des virgules
+#    - une balise laissée vide masque l'élément quand c'est possible (ex : statut)
+#
+#  Si une balise manque, le site refuse de se construire et te dit laquelle.
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# ─── Informations générales ─────────────────────────────────────────────────
+
+[site.nom]
+Timothé Montoya
+
+[site.metier]
+Ingénieur logiciel & artiste 3D
+
+[site.ville]
+Toulouse
+
+[site.presentation]
+Étudiant ingénieur à l'N7, je construis des logiciels et des mondes en 3D. Du
+moteur de jeu en Java au coach IA qui lit l'écran d'Apex Legends, en passant par
+des scènes Blender pensées comme des plans de film.
+
+
+# ─── Menu (en haut de chaque page) ──────────────────────────────────────────
+
+[menu.salle]
+Salle 3D
+
+[menu.rendus]
+Rendus
+
+[menu.projets]
+Projets
+
+[menu.contact]
+Contact
+
+
+# ─── Accueil : grand titre et phrases qui défilent ──────────────────────────
+
+[accueil.phrase1.etiquette]
+01 — Code
+
+[accueil.phrase1]
+Je construis des logiciels qui voient, comprennent et répondent.
+
+[accueil.phrase2.etiquette]
+02 — 3D
+
+[accueil.phrase2]
+Et des mondes en 3D, éclairés comme des plans de film.
+
+[accueil.defiler]
+Défiler ↓
+
+
+# ─── Salle de projection ────────────────────────────────────────────────────
+
+[salle.etiquette]
+Temps réel
+
+[salle.titre]
+Salle de projection
+
+[salle.texte]
+Mes modèles Blender, chargés directement dans le navigateur. Choisis-en un,
+attrape-le, fais-le tourner.
+
+[salle.aide]
+Glisser pour tourner · ← →
+
+
+# ─── Modèles 3D de la salle (nom + légende) ─────────────────────────────────
+
+[modele.tie.nom]
+TIE Fighter
+
+[modele.tie.legende]
+Chasseur impérial modélisé en hard-surface : miroir, biseaux et grille en wireframe.
+
+[modele.maison.nom]
+Sanctuaire
+
+[modele.maison.legende]
+Maison à colombages pensée comme un asset de jeu : toit courbé, bois texturé.
+
+[modele.robot.nom]
+Robot
+
+[modele.robot.legende]
+Personnage robot articulé, modélisé pièce par pièce.
+
+[modele.chaudron.nom]
+Chaudron
+
+[modele.chaudron.legende]
+Chaudron de sorcière stylisé, louche et bocaux sur des dalles taillées.
+
+[modele.pigeon.nom]
+Pigeon urbain
+
+[modele.pigeon.legende]
+Sculpture organique d'un pigeon de ville, pensée pour un rendu tournant.
+
+[modele.guitare.nom]
+Guitare
+
+[modele.guitare.legende]
+Guitare électrique : corps courbé, frettes en array, cordes guidées par courbe.
+
+[modele.gameboy.nom]
+Game Boy
+
+[modele.gameboy.legende]
+Console portable en modélisation produit : boutons, croix, écran.
+
+[modele.terre.nom]
+Planète low poly
+
+[modele.terre.legende]
+Une petite planète en low poly : continents facettés, sapins, rochers et nuages.
+
+[modele.chateau.nom]
+Château de sable
+
+[modele.chateau.legende]
+Petite scène en modélisation polygonale : tours, créneaux, seau.
+
+[modele.epee.nom]
+Épée
+
+[modele.epee.legende]
+Lame, garde et poignée tressée le long d'une courbe.
+
+[modele.gemme.nom]
+Bague
+
+[modele.gemme.legende]
+Bague sertie d'une gemme taillée, étude de shading cartoon.
+
+
+# ─── Galerie des rendus ─────────────────────────────────────────────────────
+
+[rendus.etiquette]
+Library Blender
+
+[rendus.titre]
+Rendus
+
+[rendus.texte]
+Lumière, brouillard, cadrage. Chaque image est pensée comme un plan de film.
+Clique pour voir en grand.
+
+[rendus.vues]
+vues
+
+
+# ─── Rendus (titre + petite note) ───────────────────────────────────────────
+
+[rendu.nebuleuse.titre]
+Nébuleuse
+
+[rendu.nebuleuse.note]
+Casque NASA, HUD animé, volumétrie
+
+[rendu.seuil.titre]
+Le seuil
+
+[rendu.seuil.note]
+Architecture, brouillard, post-production
+
+[rendu.chambre.titre]
+Chambre 2009
+
+[rendu.chambre.note]
+Intérieur, mise en scène d'objets
+
+[rendu.chaudron.titre]
+Chaudron
+
+[rendu.chaudron.note]
+Stylisé, lumières colorées
+
+[rendu.porte.titre]
+La porte
+
+[rendu.porte.note]
+Couloir, lumière volumétrique
+
+[rendu.egouts.titre]
+Égouts
+
+[rendu.egouts.note]
+Grille, lave, ambiance horrifique
+
+[rendu.liminal.titre]
+Espaces liminaux
+
+[rendu.liminal.note]
+Couloir animé, panneau en plein champ
+
+[rendu.ecran.titre]
+Écran
+
+[rendu.ecran.note]
+Objet 3D intégré dans une salle filmée
+
+[rendu.particules.titre]
+Particules
+
+[rendu.particules.note]
+Simulation, bulles lumineuses
+
+[rendu.gameboy.titre]
+Game Boy
+
+[rendu.gameboy.note]
+Objet produit, studio pastel
+
+[rendu.sanctuaire.titre]
+Sanctuaire
+
+[rendu.sanctuaire.note]
+Asset de jeu texturé
+
+[rendu.comptoir.titre]
+Comptoir, 2 h
+
+[rendu.comptoir.note]
+Nature morte, lumière chaude
+
+[rendu.prise.titre]
+Prise
+
+[rendu.prise.note]
+Design produit, néons
+
+[rendu.pigeon.titre]
+Pigeon, turntable
+
+[rendu.pigeon.note]
+Modélisation organique
+
+[rendu.popcorn.titre]
+Pop-corn
+
+[rendu.popcorn.note]
+Accessoire cartoon
+
+
+# ─── Frise « Évolution » ────────────────────────────────────────────────────
+
+[evolution.titre]
+Évolution
+
+[evolution.texte]
+Du premier objet posé sur un fond gris aux scènes éclairées comme des plans de
+film : mes rendus dans l'ordre où je les ai faits.
+
+[evolution.avant]
+avant
+
+
+# ─── Liste des projets (page d'accueil) ─────────────────────────────────────
+
+[projets.etiquette]
+Code & recherche
+
+[projets.titre]
+Projets
+
+[projets.compteur]
+projets
+
+[projets.voir]
+Voir le projet
+
+
+# ─── Projet : Chroma Buddy ──────────────────────────────────────────────────
+
+[projet.chroma-buddy.titre]
+Chroma Buddy
+
+[projet.chroma-buddy.sous-titre]
+Coach IA pour jeux vidéo
+
+[projet.chroma-buddy.statut]
+En cours
+
+[projet.chroma-buddy.resume]
+Une application de bureau qui regarde ta partie d'Apex Legends par capture
+d'écran, comprend ce qui se passe et te livre un debrief clair après chaque
+match. Sans toucher au jeu, donc compatible anti-cheat.
+
+[projet.chroma-buddy.role]
+Conception, architecture, développement
+
+[projet.chroma-buddy.technologies]
+Tauri, Rust, React, TypeScript, Python, OCR, LLM local
+
+[projet.chroma-buddy.chiffre1]
+3
+
+[projet.chroma-buddy.chiffre1.texte]
+langages qui dialoguent : TS, Rust, Python
+
+[projet.chroma-buddy.chiffre2]
+28
+
+[projet.chroma-buddy.chiffre2.texte]
+légendes dans la base de connaissances
+
+[projet.chroma-buddy.chiffre3]
+0
+
+[projet.chroma-buddy.chiffre3.texte]
+octet lu dans la mémoire du jeu
+
+[projet.chroma-buddy.partie1.titre]
+Lire un HUD comme un joueur
+
+[projet.chroma-buddy.partie1.texte]
+Le moteur découpe l'écran en zones accrochées aux bords (valable en 16:9, 16:10
+et 21:9) et y lit les kills, la santé, les boucliers, les coéquipiers, l'arme en
+main et l'ultime, par templates, OCR local et analyse de couleurs.
+
+[projet.chroma-buddy.partie2.titre]
+Une architecture en trois couches
+
+[projet.chroma-buddy.partie2.texte]
+Interface React, cœur natif Rust via Tauri, moteur d'analyse Python lancé en
+processus enfant à basse priorité. Les couches se parlent en JSON, une ligne par
+message. Chaque jeu est un module qui respecte un contrat commun et est découvert
+automatiquement.
+
+[projet.chroma-buddy.partie3.titre]
+Un coach qui cite ses sources
+
+[projet.chroma-buddy.partie3.texte]
+La base de connaissances (armes, légendes, cartes, principes de jeu) est datée et
+sourcée. Le coach répond avec ces fiches et, si un modèle de langage local est
+installé, rédige une réponse à partir d'elles uniquement.
+
+
+# ─── Projet : maintenance prédictive ────────────────────────────────────────
+
+[projet.maintenance-predictive.titre]
+Signal faible
+
+[projet.maintenance-predictive.sous-titre]
+Maintenance prédictive par l'IA
+
+[projet.maintenance-predictive.statut]
+
+[projet.maintenance-predictive.resume]
+Détecter une panne avant qu'elle arrive. Un capteur de vibrations sur une vraie
+turbine d'extraction de gaz, des défaillances provoquées volontairement, et un
+algorithme d'Isolation Forest qui apprend à repérer l'anormal.
+
+[projet.maintenance-predictive.role]
+Expérimentation, analyse de données, modèle
+
+[projet.maintenance-predictive.technologies]
+Python, scikit-learn, Isolation Forest, Capteurs IoT, Matplotlib
+
+[projet.maintenance-predictive.chiffre1]
+~74 %
+
+[projet.maintenance-predictive.chiffre1.texte]
+des anomalies détectées dans la plage de défaillance
+
+[projet.maintenance-predictive.chiffre2]
+3 axes
+
+[projet.maintenance-predictive.chiffre2.texte]
+de vitesse de vibration mesurés
+
+[projet.maintenance-predictive.chiffre3]
+ms
+
+[projet.maintenance-predictive.chiffre3.texte]
+par point analysé, compatible temps réel
+
+[projet.maintenance-predictive.partie1.titre]
+Le terrain
+
+[projet.maintenance-predictive.partie1.texte]
+Une turbine d'extraction de gaz bien réelle, un capteur de vibrations fixé sur le
+moteur. Les pannes coûtent environ 22 milliards d'euros par an à l'industrie
+française et la plupart des interventions se font dans l'urgence. Les vibrations
+trahissent la majorité des défauts mécaniques : déséquilibre, désalignement,
+roulement abîmé.
+
+[projet.maintenance-predictive.partie2.titre]
+Provoquer la panne
+
+[projet.maintenance-predictive.partie2.texte]
+Obstruction de l'entrée et de la sortie à 50 %, 80 %, puis 100 %, et suppression
+d'une phase électrique. Chaque scénario laisse une signature dans la vitesse de
+vibration sur trois axes.
+
+[projet.maintenance-predictive.partie3.titre]
+Isoler l'anormal
+
+[projet.maintenance-predictive.partie3.texte]
+Une Isolation Forest découpe l'espace au hasard : un point normal demande
+beaucoup de coupes pour être isolé, une anomalie très peu. Chaque mesure reçoit
+un score, au-delà de 0,6 c'est une alerte.
+
+
+# ─── Projet : BULLIES ───────────────────────────────────────────────────────
+
+[projet.bullies.titre]
+BULLIES
+
+[projet.bullies.sous-titre]
+RPG en Java, projet long à l'N7
+
+[projet.bullies.statut]
+
+[projet.bullies.resume]
+Un jeu de rôle en pixel art dans une école primaire, développé à cinq sur un
+moteur écrit de zéro en Java et Swing. Développeur et Product Owner, j'ai porté
+la construction de la carte, le rendu en profondeur, l'interface en jeu et le
+système de quêtes.
+
+[projet.bullies.role]
+Développeur & Product Owner, équipe de 5
+
+[projet.bullies.technologies]
+Java, Swing, Programmation objet, Git, Sprints
+
+[projet.bullies.chiffre1]
+5
+
+[projet.bullies.chiffre1.texte]
+développeurs, trois itérations de février à mai 2026
+
+[projet.bullies.chiffre2]
+6 700
+
+[projet.bullies.chiffre2.texte]
+lignes de Java, sans moteur de jeu externe
+
+[projet.bullies.chiffre3]
+4
+
+[projet.bullies.chiffre3.texte]
+états par scénario de quête : attente, dialogue, choix, terminé
+
+[projet.bullies.partie1.titre]
+Une carte qu'on déclare
+
+[projet.bullies.partie1.texte]
+J'ai refondu le Map Builder : les salles, obstacles et décors se déclarent en
+quelques lignes, et des zones fusionnées donnent des pièces aux formes non
+rectangulaires, comme le hall ou la cour. Sols, murs et contours sont texturés à
+partir de tilesets.
+
+[projet.bullies.partie2.titre]
+Devant, derrière
+
+[projet.bullies.partie2.texte]
+Un tri en profondeur (Y-sorting) place le joueur devant ou derrière chaque
+élément du décor, et les murs deviennent transparents seulement quand il passe
+derrière. Un mode debug (touche P) affiche les collisions en temps réel, ce qui
+nous a permis de corriger les bugs nés de la fusion des salles.
+
+[projet.bullies.partie3.titre]
+Une minimap qui se cadre seule
+
+[projet.bullies.partie3.texte]
+La minimap flottante calcule son zoom pour toujours contenir l'école entière. Les
+arrondis laissaient des fissures d'un pixel entre les salles fusionnées : un
+agrandissement d'un pixel au rendu les a soudées.
+
+[projet.bullies.partie4.titre]
+Des PNJ et des quêtes
+
+[projet.bullies.partie4.texte]
+J'ai dessiné la planche de tous les personnages, deux images d'animation chacun,
+chargée via un fichier JSON. Au-dessus, une architecture de scénarios (attente,
+dialogue, choix, terminé) s'attache à n'importe quel PNJ : la feuille de triche
+d'Alex, ou la quête de la fleur qui fait intervenir Émilie, Madeleine et Sarah.
+
+
+# ─── Projet : 2048 ──────────────────────────────────────────────────────────
+
+[projet.2048.titre]
+2048
+
+[projet.2048.sous-titre]
+Premier jeu, Trophées NSI
+
+[projet.2048.statut]
+
+[projet.2048.resume]
+Le jeu 2048 recodé de zéro en Python, au lycée, sans regarder le programme
+d'origine. Mon premier vrai projet d'équipe, présenté aux Trophées NSI. Tu peux y
+jouer juste en dessous.
+
+[projet.2048.role]
+Programmation, recherche d'idées, à trois
+
+[projet.2048.technologies]
+Python, Algorithmique, Travail en équipe
+
+[projet.2048.chiffre1]
+3
+
+[projet.2048.chiffre1.texte]
+élèves, deux heures par semaine
+
+[projet.2048.chiffre2]
+4
+
+[projet.2048.chiffre2.texte]
+fonctions de mouvement découpées en sous-fonctions
+
+[projet.2048.chiffre3]
+40 %
+
+[projet.2048.chiffre3.texte]
+de chances de tirer un 4, notre règle maison
+
+[projet.2048.partie1.titre]
+Du terminal…
+
+[projet.2048.partie1.texte]
+La version d'origine tourne dans un terminal : une grille formatée pour rester
+lisible, les touches ZQSD pour jouer, et des fonctions de mouvement découpées en
+gestion ligne par ligne, addition et décalage.
+
+[projet.2048.partie2.titre]
+Le bug de la ligne 1
+
+[projet.2048.partie2.texte]
+Au début, seule la première ligne se décalait. Trouver pourquoi les trois autres
+restaient figées a été notre premier vrai débogage, et la meilleure leçon du
+projet.
+
+[projet.2048.partie3.titre]
+…au navigateur
+
+[projet.2048.partie3.texte]
+Les mêmes règles, réécrites en TypeScript pour ce portfolio. Flèches ou ZQSD sur
+ordinateur, glisser sur téléphone.
+
+[projet.2048.jeu.aide]
+Clique sur le plateau · flèches, ZQSD ou glisser
+
+
+# ─── Page d'un projet (petits libellés) ─────────────────────────────────────
+
+[page-projet.retour]
+← Projets
+
+[page-projet.role]
+Rôle
+
+[page-projet.technologies]
+Technologies
+
+[page-projet.suivant]
+Projet suivant
+
+
+# ─── À propos ───────────────────────────────────────────────────────────────
+
+[apropos.etiquette]
+À propos
+
+[apropos.texte]
+En dehors du code : musique, jeux vidéo et beaucoup d'heures dans Blender. C'est
+souvent de là que viennent les idées de projets.
+
+[apropos.parcours.titre]
+Parcours
+
+[apropos.parcours1.quand]
+Aujourd'hui
+
+[apropos.parcours1.ou]
+ENSEEIHT, Toulouse
+
+[apropos.parcours1.detail]
+Cycle ingénieur Sciences du Numérique
+
+[apropos.parcours2.quand]
+Avant
+
+[apropos.parcours2.ou]
+Classe préparatoire scientifique
+
+[apropos.parcours2.detail]
+Thiers, Marseille. Maths, physique, algorithmique
+
+[apropos.outils.titre]
+Outils
+
+[apropos.outils1.groupe]
+Langages
+
+[apropos.outils1.liste]
+Java, C, TypeScript, Python, Rust, SQL, Bash
+
+[apropos.outils2.groupe]
+Web & apps
+
+[apropos.outils2.liste]
+React, Next.js, Tauri, Supabase, Vercel
+
+[apropos.outils3.groupe]
+3D
+
+[apropos.outils3.liste]
+Blender, Modélisation, Shading, Éclairage, Rendu, Three.js
+
+
+# ─── Contact (bas de chaque page) ───────────────────────────────────────────
+
+[contact.etiquette]
+Contact
+
+[contact.titre]
+On en parle
+
+[contact.texte]
+Stage, alternance, projet 3D ou simple question : je réponds à tous les messages.
+
+[contact.pied]
+Modèles 3D en temps réel · Three.js

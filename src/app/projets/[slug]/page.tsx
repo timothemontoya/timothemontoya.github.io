@@ -7,6 +7,7 @@ import { Game2048 } from "@/components/game-2048";
 import { Media } from "@/components/media";
 import { Reveal } from "@/components/reveal";
 import { getProject, projects } from "@/content/projects";
+import { t } from "@/content/textes";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -41,7 +42,7 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
         <header className="mx-auto max-w-content px-gutter pb-16 pt-36 md:pt-48">
           <Reveal>
             <Link href="/#projets" className="label text-fg-3 transition-colors hover:text-fg">
-              ← Projets
+              {t("page-projet.retour")}
             </Link>
             <p className="label mt-10 flex gap-3 text-fg-3">
               <span>{p.year}</span>
@@ -65,11 +66,11 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
           <Reveal delay={0.1} className="md:col-span-4 md:col-start-9">
             <dl className="flex flex-col gap-6">
               <div className="border-t border-line pt-4">
-                <dt className="label text-fg-3">Rôle</dt>
+                <dt className="label text-fg-3">{t("page-projet.role")}</dt>
                 <dd className="mt-2 text-fg-2">{p.role}</dd>
               </div>
               <div className="border-t border-line pt-4">
-                <dt className="label text-fg-3">Technologies</dt>
+                <dt className="label text-fg-3">{t("page-projet.technologies")}</dt>
                 <dd className="mt-2 text-fg-2">{p.stack.join(" · ")}</dd>
               </div>
             </dl>
@@ -117,7 +118,7 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
         <Link href={`/projets/${next.slug}`} className="group block border-t border-line">
           <div className="mx-auto flex max-w-content items-end justify-between gap-8 px-gutter py-20 md:py-28">
             <div>
-              <p className="label text-fg-3">Projet suivant</p>
+              <p className="label text-fg-3">{t("page-projet.suivant")}</p>
               <p className="display mt-4 text-[clamp(2.5rem,7vw,6rem)] transition-colors duration-500 group-hover:text-ember">{next.title}</p>
             </div>
             <span aria-hidden className="text-4xl text-fg-3 transition-transform duration-500 group-hover:translate-x-2">→</span>

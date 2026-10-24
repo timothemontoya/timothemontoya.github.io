@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { t } from "@/content/textes";
 import { Reveal } from "./reveal";
 
 export function ContactSection() {
@@ -17,12 +18,13 @@ export function ContactSection() {
       />
       <div className="relative mx-auto max-w-content px-gutter pb-10 pt-32 md:pt-48">
         <Reveal>
-          <p className="label text-fg-3">Contact</p>
+          <p className="label text-fg-3">{t("contact.etiquette")}</p>
           <h2 className="display mt-6 text-[clamp(3rem,9vw,8.5rem)]">
-            On en parle<span className="text-ember">?</span>
+            {t("contact.titre")}
+            <span className="text-ember">?</span>
           </h2>
           <p className="mt-8 max-w-lg text-lg text-fg-2 text-pretty">
-            Stage, alternance, projet 3D ou simple question : je réponds à tous les messages.
+            {t("contact.texte")}
           </p>
           <div className="mt-12 flex flex-wrap items-center gap-4">
             {site.links.email ? (
@@ -50,7 +52,7 @@ export function ContactSection() {
         </Reveal>
         <div className="label mt-32 flex flex-wrap justify-between gap-4 border-t border-line pt-6 text-fg-3">
           <span>© {site.name}</span>
-          <span>Modèles 3D en temps réel · Three.js</span>
+          <span>{t("contact.pied")}</span>
         </div>
       </div>
     </footer>

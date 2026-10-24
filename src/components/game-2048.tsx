@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { t } from "@/content/textes";
 
 type Grid = number[][];
 type Dir = "left" | "right" | "up" | "down";
@@ -179,7 +180,7 @@ export function Game2048() {
           </div>
         )}
       </div>
-      <p className="label mt-4 text-center text-fg-3">Clique sur le plateau · flèches, ZQSD ou glisser</p>
+      <p className="label mt-4 text-center text-fg-3">{t("projet.2048.jeu.aide")}</p>
     </div>
   );
 }

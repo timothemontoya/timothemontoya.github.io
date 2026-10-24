@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { ProjectionRoom } from "@/components/projection-room";
+import { t } from "@/content/textes";
 
 export const metadata: Metadata = {
-  title: "Salle de projection",
-  description: "Mes modèles 3D en temps réel : choisis-en un et fais-le tourner.",
+  title: t("salle.titre"),
+  description: t("salle.texte"),
 };
 
 export default function SallePage() {

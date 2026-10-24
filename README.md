@@ -10,14 +10,20 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-## Modifier le contenu
+## Modifier les textes
 
-Tout le contenu est dans `src/content/` :
+**Tous les textes du site sont dans [`TEXTES.txt`](TEXTES.txt)**, rangés sous des balises
+`[comme.ceci]`. On change le texte sous une balise, on enregistre : avec `npm run dev` la page
+se met à jour toute seule. Les règles sont rappelées en haut du fichier.
 
-- `site.ts` : nom, présentation, liens de contact
+## Modifier le reste du contenu
+
+La structure (images, fichiers 3D, dates, couleurs) est dans `src/content/` :
+
+- `site.ts` : liens de contact
 - `models.ts` : modèles de la salle de projection
 - `renders.ts` : rendus de la galerie et de la frise
-- `projects.ts` : projets (une page est générée par projet)
+- `projects.ts` : projets et leurs images (une page est générée par projet)
 
 Les fichiers (images, vidéos, `.glb`) vont dans `public/`.
 Pour ajouter un modèle Blender : `./scripts/export-model.sh chemin/vers/modele.blend`.

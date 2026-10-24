@@ -5,6 +5,7 @@ import { useLenis } from "lenis/react";
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { renders, type Render, type Shot } from "@/content/renders";
+import { t } from "@/content/textes";
 import { useReducedMotion } from "@/lib/use-media";
 import { asset } from "@/lib/asset";
 
@@ -42,7 +43,7 @@ function Frame({ item, index, onOpen }: { item: Render; index: number; onOpen: (
         />
         {item.shots.length > 1 && (
           <span className="label absolute right-3 top-3 rounded-full bg-ink-0/70 px-3 py-1.5 text-fg backdrop-blur-sm">
-            {item.shots.length} vues
+            {item.shots.length} {t("rendus.vues")}
           </span>
         )}
       </button>
@@ -184,11 +185,11 @@ function Timeline({ onOpen }: { onOpen: (ri: number) => void }) {
             {years[0][0]} → {years[years.length - 1][0]}
           </p>
           <h2 id="evolution-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
-            Évolution
+            {t("evolution.titre")}
           </h2>
         </div>
         <p className="max-w-sm text-fg-2 text-pretty">
-          Du premier objet posé sur un fond gris aux scènes éclairées comme des plans de film : mes rendus dans l&apos;ordre où je les ai faits.
+          {t("evolution.texte")}
         </p>
       </div>
 
@@ -216,7 +217,7 @@ function Timeline({ onOpen }: { onOpen: (ri: number) => void }) {
                       </span>
                       <span className="mt-3 block text-sm font-medium tracking-[-0.01em]">{r.title}</span>
                       <span className="label mt-1 block text-fg-3">
-                        {r.approx ? `avant ${month}` : month} {r.date.slice(0, 4)}
+                        {r.approx ? `${t("evolution.avant")} ${month}` : month} {r.date.slice(0, 4)}
                       </span>
                     </button>
                   </li>
@@ -285,13 +286,13 @@ export function RenderGallery() {
         <div className={pinned ? "sticky top-0 flex h-dvh flex-col justify-center overflow-hidden" : "py-24"}>
           <div className="mx-auto mb-10 flex w-full max-w-content items-end justify-between gap-8 px-gutter">
             <div>
-              <p className="label text-fg-3">Library Blender</p>
+              <p className="label text-fg-3">{t("rendus.etiquette")}</p>
               <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
-                Rendus
+                {t("rendus.titre")}
               </h2>
             </div>
             <p className="max-w-sm text-fg-2 text-pretty">
-              Lumière, brouillard, cadrage. Chaque image est pensée comme un plan de film. Clique pour voir en grand.
+              {t("rendus.texte")}
             </p>
           </div>
           <motion.div
