@@ -11,8 +11,11 @@ import { fitDistance } from "@/lib/fit-distance";
 import { useInView } from "@/lib/use-in-view";
 import { usePointer } from "@/lib/use-pointer";
 import { useReducedMotion } from "@/lib/use-media";
+import { LetterRise } from "./effects";
+import { HeroHud } from "./hero-hud";
 import { Dust } from "./three/dust";
 import { Model } from "./three/model";
+import { Orbits } from "./three/orbits";
 import { Studio } from "./three/studio";
 import { t } from "@/content/textes";
 
@@ -61,6 +64,7 @@ function Flying({ progress, still }: { progress: MotionValue<number>; still: boo
   return (
     <group ref={ref} position={[0.9, 0.05, 0]}>
       <Model url={hero.file} studio finish={hero.finish} />
+      <Orbits still={still} />
     </group>
   );
 }
@@ -95,7 +99,7 @@ export function Hero() {
   const cueOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
   return (
-    <section ref={section} aria-label="Présentation" className="relative h-[320vh]">
+    <section ref={section} id="accueil" aria-label="Présentation" className="relative h-[320vh]">
       <div className="sticky top-0 h-dvh overflow-hidden">
         {/* Lumière de projecteur : une nappe venue du haut et des faisceaux qui balaient lentement. */}
         <div aria-hidden className="hero-backdrop pointer-events-none absolute inset-0" />
@@ -115,15 +119,20 @@ export function Hero() {
           </Suspense>
         </Canvas>
 
+        <motion.div style={{ opacity: introOpacity }} className="absolute inset-0">
+          <HeroHud model={hero.name} year={hero.year} />
+        </motion.div>
+
         <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-content flex-col justify-end px-gutter pb-16 md:pb-20">
           <motion.div style={{ opacity: introOpacity, y: introY }}>
-            <p className="label text-fg-2">
+            <p className="hud-in label text-fg-2" style={{ animationDelay: "1.5s" }}>
               {site.role} · {site.city}
             </p>
-            <h1 className="display mt-5 text-[clamp(3.5rem,11vw,10rem)]">
+            {/* Le nom monte lettre par lettre, juste après l'écran de chargement. */}
+            <h1 className="display mt-5 text-[clamp(3.5rem,11vw,10rem)]" aria-label={site.name}>
               {site.name.split(" ").map((word, i) => (
                 <span key={i} className="block">
-                  {word}
+                  <LetterRise text={word} delay={1.25 + i * 0.22} />
                 </span>
               ))}
             </h1>

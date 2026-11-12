@@ -1,5 +1,6 @@
 import { site } from "@/content/site";
 import { list, numbered, t } from "@/content/textes";
+import { ScrollWords } from "./effects";
 import { Reveal } from "./reveal";
 import { SectionLabel } from "./section-label";
 
@@ -18,13 +19,15 @@ const toolbox = numbered("apropos.outils", "groupe").map((i) => ({
 
 export function AboutSection() {
   return (
-    <section id="apropos" data-snap aria-labelledby="apropos-titre" className="border-t border-line">
+    <section id="apropos" aria-labelledby="apropos-titre" className="border-t border-line">
       <div className="mx-auto grid max-w-content gap-16 px-gutter py-32 md:grid-cols-12 md:py-48">
         <Reveal className="md:col-span-7">
           <SectionLabel n="04">{t("apropos.etiquette")}</SectionLabel>
-          <h2 id="apropos-titre" className="mt-6 text-[clamp(1.75rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.03em] text-pretty">
-            {site.pitch}
-          </h2>
+          <ScrollWords
+            id="apropos-titre"
+            text={site.pitch}
+            className="mt-6 text-[clamp(1.75rem,3.4vw,3rem)] font-medium leading-[1.05] tracking-[-0.03em] text-pretty"
+          />
           <p className="mt-8 max-w-xl text-fg-2 text-pretty">
             {t("apropos.texte")}
           </p>

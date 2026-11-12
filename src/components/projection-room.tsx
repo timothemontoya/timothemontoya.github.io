@@ -77,6 +77,36 @@ type Props = {
   heading?: { index?: string; kicker: string; title: string; text: string; id: string };
 };
 
+/** Durée d'un chiffre du décompte d'entrée (ms). */
+const COUNT = 420;
+
+/**
+ * Entrée dans la salle, comme un début de séance : un décompte 3-2-1 d'amorce de film,
+ * puis l'obturateur s'ouvre. Renvoie 0 (en attente), 1 à 3 (décompte) ou 4 (ouvert).
+ */
+function useRoomIntro(ref: RefObject<HTMLElement | null>, still: boolean) {
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        [1, 2, 3, 4].forEach((p, i) => timers.push(setTimeout(() => setPhase(p), i * COUNT)));
+      },
+      { threshold: 0.55 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      timers.forEach(clearTimeout);
+    };
+  }, [ref]);
+  return still ? 4 : phase;
+}
+
 export function ProjectionRoom({ className, heading }: Props) {
   const [index, setIndex] = useState(0);
   const [shown, setShown] = useState(0);
@@ -87,6 +117,8 @@ export function ProjectionRoom({ className, heading }: Props) {
   const drag = useRef<{ id: number; x: number; y: number } | null>(null);
   const visible = useInView(container);
   const still = useReducedMotion();
+  const phase = useRoomIntro(container, still);
+  const lit = phase === 4;
   const current = models[shown];
   const info = models[index];
 
@@ -193,7 +225,14 @@ export function ProjectionRoom({ className, heading }: Props) {
           <div className="mx-auto flex max-w-content items-end justify-between gap-8">
             <div>
               <SectionLabel n={heading.index}>{heading.kicker}</SectionLabel>
-              <h2 id={heading.id} className="mt-3 text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+              {/* Mise au point : le titre arrive flou, comme une image qu'on règle au projecteur. */}
+              <h2
+                id={heading.id}
+                className={cn(
+                  "mt-3 text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[0.95] tracking-[-0.035em] transition-[filter,opacity,letter-spacing] delay-500 duration-[1500ms] ease-out-cine",
+                  !lit && "tracking-[0.14em] opacity-0 blur-[14px]",
+                )}
+              >
                 {heading.title}
               </h2>
             </div>
@@ -226,6 +265,40 @@ export function ProjectionRoom({ className, heading }: Props) {
           <p className="label hidden shrink-0 text-fg-3 md:block">{t("salle.aide")}</p>
         </div>
       </div>
+
+      {/* Faisceau du projecteur, qui s'allume à l'ouverture */}
+      <div aria-hidden className={cn("room-beam pointer-events-none absolute inset-0 -z-10 opacity-0", lit && "room-beam-on")} />
+
+      {/* Entrée cinématique : obturateur en deux volets et décompte d'amorce */}
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 z-30 h-1/2 origin-top border-b border-fg-3/50 bg-ink-0 transition-transform duration-[1300ms] ease-out-cine",
+          lit && "scale-y-0",
+        )}
+      />
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-x-0 bottom-0 z-30 h-1/2 origin-bottom border-t border-fg-3/50 bg-ink-0 transition-transform duration-[1300ms] ease-out-cine",
+          lit && "scale-y-0",
+        )}
+      />
+      {phase > 0 && phase < 4 && (
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-40 grid place-items-center">
+          <div className="relative grid size-[min(46vw,15rem)] place-items-center">
+            <span className="absolute inset-x-[-40%] top-1/2 h-px bg-line" />
+            <span className="absolute inset-y-[-40%] left-1/2 w-px bg-line" />
+            <svg viewBox="0 0 100 100" className="absolute inset-0 -rotate-90">
+              <circle cx="50" cy="50" r="48" fill="none" stroke="var(--line)" strokeWidth="0.6" />
+              <circle key={phase} className="leader-sweep" cx="50" cy="50" r="48" fill="none" stroke="var(--fg-2)" strokeWidth="0.9" pathLength={1} strokeDasharray="1" />
+            </svg>
+            <span key={phase} className="dots leader-pop text-[clamp(4rem,14vw,8rem)] text-fg">
+              {4 - phase}
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Sélecteur de modèles */}
       <nav aria-label="Choisir un modèle" className="relative z-20 pb-6 md:pb-8">

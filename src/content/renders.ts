@@ -33,7 +33,7 @@ const withText = (r: RenderData): Render => ({ ...r, title: t(`rendu.${r.id}.tit
  * Rendus mis en avant dans le carrousel en spirale (leur `id`, dans l'ordre d'apparition).
  * Tous les rendus restent visibles dans la frise « Évolution ».
  */
-export const spiral = ["nebuleuse", "seuil", "chambre", "chaudron", "egouts", "liminal", "comptoir", "prise", "gameboy"];
+export const spiral = ["nebuleuse", "seuil", "chambre", "chaudron", "egouts", "liminal", "comptoir", "gameboy"];
 
 export const renders: Render[] = ([
   {

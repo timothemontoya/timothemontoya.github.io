@@ -22,7 +22,7 @@ function ShotMedia({ shot, alt, sizes, priority, className }: { shot: Shot; alt:
 }
 
 /** Visionneuse plein écran : flèches pour naviguer, Échap ou clic à côté pour fermer. */
-function Lightbox({ at, onClose, onMove }: { at: number; onClose: () => void; onMove: (delta: number) => void }) {
+function Lightbox({ at, instant, onClose, onMove }: { at: number; instant?: boolean; onClose: () => void; onMove: (delta: number) => void }) {
   const { render, shot, si } = slides[at];
   const close = useRef<HTMLButtonElement>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
@@ -55,8 +55,8 @@ function Lightbox({ at, onClose, onMove }: { at: number; onClose: () => void; on
       className="fixed inset-0 z-[150] flex flex-col bg-ink-0/95 backdrop-blur-md"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.35 }}
+      exit={{ opacity: 0, transition: { duration: 0.35 } }}
+      transition={{ duration: instant ? 0.12 : 0.35 }}
       data-lenis-prevent
     >
       <div className="flex items-center justify-between gap-6 px-gutter py-5">
@@ -78,7 +78,7 @@ function Lightbox({ at, onClose, onMove }: { at: number; onClose: () => void; on
           <motion.div
             key={shot.src}
             className="absolute inset-x-gutter inset-y-0"
-            initial={{ opacity: 0, scale: 0.985 }}
+            initial={instant ? false : { opacity: 0, scale: 0.985 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.2, 0.7, 0.1, 1] }}
@@ -144,7 +144,7 @@ const years = Object.entries(
  */
 function Timeline({ onOpen }: { onOpen: (ri: number) => void }) {
   return (
-    <section data-snap aria-labelledby="evolution-titre" className="mx-auto max-w-content px-gutter py-32 md:py-40">
+    <section aria-labelledby="evolution-titre" className="mx-auto max-w-content px-gutter py-32 md:py-40">
       <div className="flex flex-wrap items-end justify-between gap-8">
         <div>
           <p className="label text-fg-3">
@@ -200,9 +200,11 @@ function Timeline({ onOpen }: { onOpen: (ri: number) => void }) {
 /** Rendus du carrousel en spirale, dans l'ordre choisi dans renders.ts. */
 const featured = spiral.map((id) => renders.find((r) => r.id === id)).filter((r): r is Render => Boolean(r));
 
-/** Les rendus préférés en spirale, puis la frise de tous les rendus. Clic : visionneuse plein écran. */
+/** Les rendus préférés en spirale, puis la frise de tous les rendus. Clic : on entre dans l'image. */
 export function RenderGallery() {
   const [open, setOpen] = useState<number | null>(null);
+  // Vrai quand la visionneuse s'ouvre à la fin du zoom de la spirale : elle apparaît alors sans fondu.
+  const [fromSpiral, setFromSpiral] = useState(false);
   const lenis = useLenis();
 
   // La page ne défile pas derrière la visionneuse.
@@ -212,28 +214,39 @@ export function RenderGallery() {
     return () => lenis?.start();
   }, [open, lenis]);
 
-  const onClose = useCallback(() => setOpen(null), []);
-  const onMove = useCallback((delta: number) => setOpen((o) => (o === null ? o : (o + delta + slides.length) % slides.length)), []);
-  const openRender = useCallback((id: string) => setOpen(slides.findIndex((s) => s.render.id === id)), []);
+  const onClose = useCallback(() => {
+    setOpen(null);
+    setFromSpiral(false);
+  }, []);
+  const onMove = useCallback((delta: number) => {
+    setFromSpiral(false);
+    setOpen((o) => (o === null ? o : (o + delta + slides.length) % slides.length));
+  }, []);
+  // La spirale montre la première image fixe de chaque rendu : c'est sur elle que la visionneuse s'ouvre.
+  const openRender = useCallback((id: string) => {
+    setFromSpiral(true);
+    setOpen(slides.findIndex((s) => s.render.id === id && s.shot.kind === "image"));
+  }, []);
 
   return (
     <>
-      <section id="rendus" data-snap aria-labelledby="rendus-titre" className="relative overflow-hidden pb-16 pt-28 md:pt-32">
-        <div className="mx-auto flex w-full max-w-content flex-wrap items-end justify-between gap-8 px-gutter">
-          <div>
-            <SectionLabel n="02">{t("rendus.etiquette")}</SectionLabel>
-            <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
-              {t("rendus.titre")}
-            </h2>
+      <section id="rendus" data-snap aria-labelledby="rendus-titre">
+        <RenderSpiral renders={featured} viewing={open === null ? null : slides[open].render.id} onOpen={openRender}>
+          <div className="mx-auto flex w-full max-w-content flex-wrap items-end justify-between gap-x-8 gap-y-4 px-gutter">
+            <div>
+              <SectionLabel n="02">{t("rendus.etiquette")}</SectionLabel>
+              <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+                {t("rendus.titre")}
+              </h2>
+            </div>
+            <p className="hidden max-w-sm text-fg-2 text-pretty md:block">{t("rendus.texte")}</p>
           </div>
-          <p className="max-w-sm text-fg-2 text-pretty">{t("rendus.texte")}</p>
-        </div>
-        <RenderSpiral items={featured} onOpen={openRender} />
+        </RenderSpiral>
       </section>
 
       <Timeline onOpen={(ri) => setOpen(slides.findIndex((sl) => sl.ri === ri))} />
 
-      <AnimatePresence>{open !== null && <Lightbox at={open} onClose={onClose} onMove={onMove} />}</AnimatePresence>
+      <AnimatePresence>{open !== null && <Lightbox at={open} instant={fromSpiral} onClose={onClose} onMove={onMove} />}</AnimatePresence>
     </>
   );
 }

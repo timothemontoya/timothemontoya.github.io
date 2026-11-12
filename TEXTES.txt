@@ -88,6 +88,13 @@ Et des mondes en 3D, éclairés comme des plans de film.
 [accueil.defiler]
 Défiler ↓
 
+# Petits libellés du cadre autour du modèle 3D de l'accueil
+[accueil.hud.modele]
+Modèle
+
+[accueil.hud.direct]
+Temps réel
+
 
 # ─── Salle de projection ────────────────────────────────────────────────────
 
@@ -184,13 +191,13 @@ Rendus
 
 [rendus.texte]
 Lumière, brouillard, cadrage. Chaque rendu cherche son ambiance, épique ou décalée.
-Voici mes préférés : fais tourner la spirale et clique pour voir en grand.
+Voici mes préférés : fais tourner la spirale et clique pour entrer dans l'image.
 
 [rendus.vues]
 vues
 
 [rendus.aide]
-Glisser · cliquer pour agrandir
+Glisser · cliquer pour entrer
 
 
 # ─── Rendus (titre + petite note) ───────────────────────────────────────────

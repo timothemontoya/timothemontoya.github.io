@@ -61,7 +61,7 @@ export function ProjectsSection() {
   const p = projects[active];
 
   return (
-    <section id="projets" data-snap aria-labelledby="projets-titre" className="mx-auto max-w-content px-gutter py-32 md:py-48">
+    <section id="projets" aria-labelledby="projets-titre" className="mx-auto max-w-content px-gutter py-32 md:py-48">
       <Reveal className="flex items-end justify-between gap-8">
         <div>
           <SectionLabel n="03">{t("projets.etiquette")}</SectionLabel>

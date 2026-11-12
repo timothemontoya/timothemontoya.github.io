@@ -1,5 +1,6 @@
 import { site } from "@/content/site";
 import { t } from "@/content/textes";
+import { Typewriter } from "./effects";
 import { Reveal } from "./reveal";
 import { SectionLabel } from "./section-label";
 
@@ -12,18 +13,12 @@ export function ContactSection() {
   ].filter((l) => l.href);
 
   return (
-    <footer id="contact" data-snap className="relative overflow-hidden border-t border-line">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 60% 70% at 50% 120%, rgb(255 122 61 / 0.16), transparent 70%)" }}
-      />
+    <footer id="contact" className="relative overflow-hidden border-t border-line">
       <div className="relative mx-auto max-w-content px-gutter pb-10 pt-32 md:pt-48">
         <Reveal>
           <SectionLabel n="05">{t("contact.etiquette")}</SectionLabel>
           <h2 className="display mt-6 text-[clamp(3rem,9vw,8.5rem)]">
-            {t("contact.titre")}
-            <span className="text-ember">?</span>
+            <Typewriter text={t("contact.titre")} suffix={<span className="text-ember">?</span>} />
           </h2>
           <p className="mt-8 max-w-lg text-lg text-fg-2 text-pretty">
             {t("contact.texte")}
