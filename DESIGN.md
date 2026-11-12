@@ -98,8 +98,9 @@ jamais pour une phrase.
 - **Bloc téléchargement** : carte `--ink-1`. Bouton plein quand le
   fichier existe, pastille « Bientôt disponible » en pointillés sinon. Le bloc de dons
   n'apparaît que si un lien est renseigné.
-- **Salle de projection** : une scène 3D plein écran ; une flaque d'encre sombre se répand sous
-  le modèle à l'allumage pour que les modèles clairs se détachent du papier, une liste de modèles en bas, un cartouche
+- **Salle de projection** : une scène 3D plein écran ; à l'allumage, les taches tramées du fond se
+  concentrent derrière le modèle (violet vif puis magenta au centre) pour que les modèles clairs
+  se détachent du papier, une liste de modèles en bas, un cartouche
   d'informations (nom, année, polygones) en bas à gauche, à la manière d'une fiche de musée.
 
 ## 5. Mise en page

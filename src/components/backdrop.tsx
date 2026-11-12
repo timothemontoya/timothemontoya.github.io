@@ -20,6 +20,8 @@ const fragmentShader = /* glsl */ `
   uniform float uTime;
   uniform float uScroll;
   uniform float uFocus;
+  // Flaque de la salle de projection : centre (pixels), rayon (pixels), force.
+  uniform vec4 uPool;
   // Traînée de la souris : position (pixels) et force de chaque point, du plus récent au plus ancien.
   uniform vec3 uTrail[${TRAIL}];
 
@@ -70,6 +72,11 @@ const fragmentShader = /* glsl */ `
     vec2 pool = (p - vec2(uRes.x * 0.66, uRes.y * 0.47)) / uRes.y;
     v += uFocus * 0.13 * exp(-dot(pool, pool) * 5.0);
 
+    // Salle de projection : l'encre se concentre derrière le modèle, jusqu'au magenta au centre,
+    // pour qu'un modèle clair s'en détache. Les bords suivent le bruit, comme les autres taches.
+    vec2 room = (p - uPool.xy) / uPool.z + (warp - 0.5) * 0.55;
+    v += uPool.w * 0.62 * exp(-dot(room, room) * 1.7);
+
     // La souris remue l'encre : un trait fin qui fonce légèrement la tache puis s'évapore.
     // Le bruit le déforme à peine, pour qu'il reste fluide.
     float ink = 0.0;
@@ -105,6 +112,7 @@ function Field({ still }: { still: boolean }) {
       uTime: { value: 0 },
       uScroll: { value: 0 },
       uFocus: { value: 0 },
+      uPool: { value: new THREE.Vector4(-9999, -9999, 1, 0) },
       uTrail: { value: Array.from({ length: TRAIL }, () => new THREE.Vector3(-9999, -9999, 0)) },
     }),
     [],
@@ -133,8 +141,20 @@ function Field({ still }: { still: boolean }) {
     // La flaque derrière le modèle n'existe qu'en haut de la page d'accueil, sur grand écran.
     const home = window.location.pathname === "/" && width >= 768;
     u.uFocus.value = home ? Math.max(0, 1 - window.scrollY / (height * 0.9)) : 0;
-    if (still) return;
+
+    // Flaque de la salle : suit la salle à l'écran et se répand quand sa lampe s'allume.
     const dt = Math.min(0.05, delta);
+    const pool = u.uPool.value as THREE.Vector4;
+    const room = document.querySelector<HTMLElement>("[data-ink-pool]");
+    const r = room?.getBoundingClientRect();
+    const onScreen = !!r && r.bottom > 0 && r.top < height;
+    const target = onScreen && room!.dataset.inkPool === "on" ? 1 : 0;
+    pool.w = still ? target : pool.w + (target - pool.w) * (1 - Math.exp(-dt * 1.4));
+    if (r) {
+      const radius = Math.min(r.height * 0.36, r.width * 0.4);
+      pool.set(r.left + r.width / 2, r.top + r.height * 0.5, radius * (0.55 + 0.45 * pool.w), pool.w);
+    }
+    if (still) return;
     u.uTime.value += dt;
 
     // Traînée : chaque point s'efface vite ; le pinceau rattrape la souris en douceur et pose
