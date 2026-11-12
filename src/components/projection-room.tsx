@@ -187,12 +187,25 @@ export function ProjectionRoom({ className, heading }: Props) {
 
   return (
     <div ref={container} className={cn("relative isolate flex h-svh min-h-[560px] flex-col overflow-hidden", className)}>
+      {/* Flaque d'encre sombre sous le modèle : les modèles clairs se détachent du papier crème.
+          Elle se répand quand la lampe s'allume. */}
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute left-1/2 top-[52%] -z-10 aspect-[1.15] w-[min(100vh,92vw)] -translate-x-1/2 -translate-y-1/2 transition-[opacity,scale] duration-[1600ms] ease-out-cine",
+          lit ? "scale-100 opacity-100" : "scale-75 opacity-0",
+        )}
+        style={{
+          background:
+            "radial-gradient(closest-side, #130c1f 0%, #130c1f 50%, rgb(19 12 31 / 0.85) 66%, rgb(46 14 82 / 0.4) 82%, transparent 100%)",
+        }}
+      />
       {/* Halo de projecteur derrière le modèle */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 transition-[background] duration-1000"
         style={{
-          background: `radial-gradient(ellipse 55% 45% at 50% 50%, color-mix(in oklab, ${info.key} 16%, transparent), transparent 70%), radial-gradient(ellipse 40% 12% at 50% 80%, rgb(255 255 255 / 0.05), transparent 70%)`,
+          background: `radial-gradient(ellipse 55% 45% at 50% 50%, color-mix(in oklab, ${info.key} 24%, transparent), transparent 70%), radial-gradient(ellipse 40% 12% at 50% 80%, rgb(255 255 255 / 0.05), transparent 70%)`,
         }}
       />
 

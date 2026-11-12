@@ -39,10 +39,10 @@ export const renders: Render[] = ([
   {
     id: "nebuleuse", date: "2026-09", approx: true,
     shots: [
+      img("/renders/helmet-dark2.jpg", 16 / 9),
       img("/renders/helmet-nebula.jpg", 16 / 9),
       img("/renders/helmet-scan.jpg", 16 / 9),
       img("/renders/helmet-dark1.jpg", 16 / 9),
-      img("/renders/helmet-dark2.jpg", 16 / 9),
     ],
   },
   { id: "seuil", date: "2026-06", approx: true, shots: [img("/renders/donjon.jpg", 1168 / 1652)] },

@@ -88,17 +88,17 @@ body {
   text-transform: uppercase;
 }
 
-/* Décalage d'impression : une passe magenta à côté de l'encre, comme sur une sérigraphie mal calée.
-   Reprend les couleurs des taches du fond pour que les titres en fassent partie. */
+/* Encre nette, détourée par un léger halo couleur papier : les grands titres restent lisibles
+   quand une tache violette passe derrière eux, sans effet de relief. */
 @utility riso {
-  text-shadow: 0.035em 0.035em 0 rgb(201 33 230 / 0.55), -0.012em -0.012em 0 rgb(89 204 255 / 0.5);
+  text-shadow: 0 0 0.35em color-mix(in srgb, var(--ink-0) 75%, transparent);
 }
 
 @utility display {
   font-weight: 500;
   line-height: 0.88;
   letter-spacing: -0.045em;
-  text-shadow: 0.035em 0.035em 0 rgb(201 33 230 / 0.55), -0.012em -0.012em 0 rgb(89 204 255 / 0.5);
+  text-shadow: 0 0 0.35em color-mix(in srgb, var(--ink-0) 75%, transparent);
 }
 
 @utility no-scrollbar {

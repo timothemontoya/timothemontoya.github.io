@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { useReducedMotion } from "@/lib/use-media";
 
 /** Nombre de points gardés en mémoire pour la traînée d'encre de la souris. */
-const TRAIL = 16;
+const TRAIL = 28;
 
 const vertexShader = /* glsl */ `
   void main() {
@@ -70,14 +70,14 @@ const fragmentShader = /* glsl */ `
     vec2 pool = (p - vec2(uRes.x * 0.66, uRes.y * 0.47)) / uRes.y;
     v += uFocus * 0.13 * exp(-dot(pool, pool) * 5.0);
 
-    // La souris remue l'encre : là où elle passe, la tache s'épaissit puis se dissout.
-    // Le bruit déforme la traînée pour qu'elle bave comme le reste.
+    // La souris remue l'encre : un trait fin qui fonce légèrement la tache puis s'évapore.
+    // Le bruit le déforme à peine, pour qu'il reste fluide.
     float ink = 0.0;
     for (int i = 0; i < ${TRAIL}; i++) {
-      vec2 d = (p - uTrail[i].xy) / uRes.y + (warp - 0.5) * 0.09;
-      ink += uTrail[i].z * exp(-dot(d, d) * 70.0);
+      vec2 d = (p - uTrail[i].xy) / uRes.y + (warp - 0.5) * 0.03;
+      ink += uTrail[i].z * exp(-dot(d, d) * 900.0);
     }
-    v += min(ink, 1.2) * 0.2;
+    v += smoothstep(0.5, 5.0, ink) * 0.2;
     v = smoothstep(0.50, 0.82, v);
 
     // Réduction à quelques teintes, tramée.
@@ -112,6 +112,8 @@ function Field({ still }: { still: boolean }) {
 
   // Dernière position connue de la souris (ou du doigt), en pixels.
   const pointer = useRef<{ x: number; y: number } | null>(null);
+  // Pinceau : il suit la souris avec un peu de retard, ce qui arrondit les mouvements brusques.
+  const brush = useRef<{ x: number; y: number } | null>(null);
   const head = useRef(0);
   useEffect(() => {
     if (still) return;
@@ -135,17 +137,23 @@ function Field({ still }: { still: boolean }) {
     const dt = Math.min(0.05, delta);
     u.uTime.value += dt;
 
-    // Traînée : chaque point s'efface peu à peu ; un nouveau point est posé dès que la souris
-    // s'est assez éloignée du dernier (le plus ancien est recyclé).
+    // Traînée : chaque point s'efface vite ; le pinceau rattrape la souris en douceur et pose
+    // un point tous les quelques pixels (le plus ancien est recyclé), d'où un trait continu.
     const trail = u.uTrail.value as THREE.Vector3[];
-    const fade = Math.exp(-dt * 0.8);
+    const fade = Math.exp(-dt * 2.6);
     for (const point of trail) point.z *= fade;
     const at = pointer.current;
     if (at) {
+      const b = (brush.current ??= { ...at });
+      const k = 1 - Math.exp(-dt * 14);
+      b.x += (at.x - b.x) * k;
+      b.y += (at.y - b.y) * k;
       const last = trail[head.current];
-      if (Math.hypot(at.x - last.x, at.y - last.y) > 26) {
+      const gap = Math.hypot(b.x - last.x, b.y - last.y);
+      if (gap > 9) {
         head.current = (head.current + 1) % TRAIL;
-        trail[head.current].set(at.x, at.y, 1);
+        // Plus le geste est rapide, plus le trait est léger : il ne fait plus de grosses flaques.
+        trail[head.current].set(b.x, b.y, Math.min(1, 0.55 + 6 / gap));
       }
     }
   });
@@ -161,7 +169,7 @@ function Field({ still }: { still: boolean }) {
 /**
  * Fond de tout le site : un papier crème taché de violet, réduit à quelques teintes et tramé
  * comme une impression. Fixe derrière le contenu, il dérive très lentement, et la souris y
- * laisse une traînée d'encre qui se dissout.
+ * laisse un fin trait d'encre qui s'évapore.
  */
 export function Backdrop() {
   const still = useReducedMotion();
