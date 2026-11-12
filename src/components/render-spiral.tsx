@@ -28,6 +28,8 @@ type Motion = {
   x: number;
   moved: number;
   paused: boolean;
+  /** Vrai tant que le carrousel n'occupe pas l'écran : il attend alors sur le premier rendu. */
+  away: boolean;
   idle: number;
   /** Zoom dans une image : index, sens (1 entre, -1 ressort, 0 au repos) et avancement 0 → 1. */
   zoomI: number;
@@ -55,6 +57,8 @@ const fragmentShader = /* glsl */ `
   uniform sampler2D uMap;
   uniform float uVel;
   uniform float uGlitch;
+  uniform float uIdle;
+  uniform float uSeed;
   uniform float uTime;
   uniform float uAlpha;
   varying vec2 vUv;
@@ -64,8 +68,11 @@ const fragmentShader = /* glsl */ `
   }
 
   void main() {
-    // Intensité du glitch : nulle à l'arrêt, elle suit la vitesse du carrousel.
-    float g = clamp(abs(uVel) + uGlitch, 0.0, 1.0);
+    // Au repos : un frémissement à peine visible, et de temps en temps un court décrochage.
+    float burst = step(0.9, hash(floor(uTime * 2.5) + uSeed));
+    float idle = uIdle * (0.035 + 0.22 * burst);
+    // En mouvement, le glitch suit la vitesse du carrousel.
+    float g = clamp(abs(uVel) + uGlitch + idle, 0.0, 1.0);
     vec2 uv = vUv;
     float t = floor(uTime * 22.0);
     float row = floor(uv.y * 110.0);
@@ -125,6 +132,8 @@ function Planes({
         uBend: { value: 0 },
         uVel: { value: 0 },
         uGlitch: { value: 0 },
+        uIdle: { value: 0 },
+        uSeed: { value: 0 },
         uTime: { value: 0 },
         uAlpha: { value: 0 },
       })),
@@ -136,7 +145,7 @@ function Planes({
     const dt = Math.min(0.05, delta);
 
     // Avance automatique d'un cran, sauf pendant un geste ou un zoom.
-    if (still || m.dragging || m.paused || m.zoom > 0 || m.zoomDir !== 0) m.idle = 0;
+    if (still || m.away || m.dragging || m.paused || m.zoom > 0 || m.zoomDir !== 0) m.idle = 0;
     else if ((m.idle += dt) > PAUSE) {
       m.idle = 0;
       m.target = Math.round(m.target) + 1;
@@ -171,10 +180,10 @@ function Planes({
       let k = (((i - m.p) % n) + n) % n;
       if (k > n / 2) k -= n;
 
-      let h = Math.min(vh * 0.48, (vw * 0.84) / ratio);
+      let h = Math.min(vh * 0.62, (vw * 0.9) / ratio);
       let w = h * ratio;
-      let x = k * vw * 0.46;
-      let y = -k * vh * 0.6;
+      let x = k * vw * 0.56;
+      let y = -k * vh * 0.7;
       let z = -Math.abs(k) * 0.7;
       let ry = -k * 0.32;
       let rz = -k * 0.42;
@@ -184,13 +193,16 @@ function Planes({
 
       if (zooming) {
         // Entrée dans l'image : elle vient occuper exactement la place qu'elle aura dans la visionneuse.
+        // Mêmes mesures que la visionneuse (render-gallery.tsx) : bandeau de 72px, pied de 76px,
+        // largeur sans la barre de défilement. Sans cela l'image sauterait de quelques pixels au relais.
         const gutter = Math.min(48, Math.max(16, window.innerWidth * 0.04));
+        const page = document.documentElement.clientWidth;
         const top = 72;
         const bottom = window.innerHeight - 76;
-        const tw = Math.min(window.innerWidth - gutter * 2, (bottom - top) * ratio);
+        const tw = Math.min(page - gutter * 2, (bottom - top) * ratio);
         w = mix(w, tw * unit, e);
         h = mix(h, (tw / ratio) * unit, e);
-        x = mix(x, (window.innerWidth / 2 - rect.left - rect.width / 2) * unit, e);
+        x = mix(x, (page / 2 - rect.left - rect.width / 2) * unit, e);
         y = mix(y, -((top + bottom) / 2 - rect.top - rect.height / 2) * unit, e);
         z = mix(z, 0, e);
         ry = mix(ry, 0, e);
@@ -206,7 +218,10 @@ function Planes({
       mesh.renderOrder = zooming ? 100 : 50 - Math.round(Math.abs(k) * 10);
       u.uBend.value = bend;
       u.uVel.value = zooming ? lag * (1 - e) : lag;
-      u.uGlitch.value = zooming && !still ? Math.sin(Math.PI * m.zoom) * 0.7 : 0;
+      u.uGlitch.value = zooming && !still ? Math.sin(Math.PI * Math.min(1, m.zoom * 1.4)) * 0.7 : 0;
+      // Le frémissement s'éteint pendant l'entrée dans l'image : elle arrive nette dans la visionneuse.
+      u.uIdle.value = still ? 0 : zooming ? 1 - e : 1;
+      u.uSeed.value = i * 7.3;
       u.uAlpha.value = alpha;
       u.uTime.value = state.clock.elapsedTime;
     }
@@ -265,7 +280,7 @@ export function RenderSpiral({
 }) {
   const stage = useRef<HTMLDivElement>(null);
   const chrome = useRef<HTMLDivElement>(null);
-  const motion = useRef<Motion>({ p: 0, target: 0, vel: 0, dragging: false, x: 0, moved: 0, paused: false, idle: 0, zoomI: -1, zoomDir: 0, zoom: 0 });
+  const motion = useRef<Motion>({ p: 0, target: 0, vel: 0, dragging: false, x: 0, moved: 0, paused: false, away: true, idle: 0, zoomI: -1, zoomDir: 0, zoom: 0 });
   const [front, setFront] = useState(0);
   const visible = useInView(stage);
   const still = useReducedMotion();
@@ -325,6 +340,16 @@ export function RenderSpiral({
     m.p = m.target;
     m.zoomI = i;
   }, [viewing, items]);
+
+  // L'avance automatique ne démarre que lorsque le carrousel remplit au moins la moitié de l'écran :
+  // on arrive toujours sur le premier rendu.
+  useEffect(() => {
+    const el = stage.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => (motion.current.away = !entry.isIntersecting), { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Glisser : écoute sur la fenêtre pour ne pas perdre le geste hors de la zone.
   useEffect(() => {

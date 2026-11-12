@@ -13,9 +13,9 @@ import { usePointer } from "@/lib/use-pointer";
 import { useReducedMotion } from "@/lib/use-media";
 import { LetterRise } from "./effects";
 import { HeroHud } from "./hero-hud";
+import { Abyss } from "./three/abyss";
 import { Dust } from "./three/dust";
 import { Model } from "./three/model";
-import { Orbits } from "./three/orbits";
 import { Studio } from "./three/studio";
 import { t } from "@/content/textes";
 
@@ -64,7 +64,6 @@ function Flying({ progress, still }: { progress: MotionValue<number>; still: boo
   return (
     <group ref={ref} position={[0.9, 0.05, 0]}>
       <Model url={hero.file} studio finish={hero.finish} />
-      <Orbits still={still} />
     </group>
   );
 }
@@ -101,9 +100,6 @@ export function Hero() {
   return (
     <section ref={section} id="accueil" aria-label="Présentation" className="relative h-[320vh]">
       <div className="sticky top-0 h-dvh overflow-hidden">
-        {/* Lumière de projecteur : une nappe venue du haut et des faisceaux qui balaient lentement. */}
-        <div aria-hidden className="hero-backdrop pointer-events-none absolute inset-0" />
-        <div aria-hidden className="hero-beams pointer-events-none absolute" />
         <Canvas
           className="!absolute inset-0"
           frameloop={visible ? "always" : "never"}
@@ -113,6 +109,7 @@ export function Hero() {
           aria-hidden
         >
           <Studio keyColor={hero.key} shadow={false} />
+          <Abyss progress={scrollYProgress} still={still} />
           <Dust progress={scrollYProgress} still={still} />
           <Suspense fallback={null}>
             <Flying progress={scrollYProgress} still={still} />

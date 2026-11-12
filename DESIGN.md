@@ -60,12 +60,14 @@ jamais pour une phrase.
   droite (visuel, résumé, rôle, technologies). Le survol d'un titre l'active : son numéro passe
   en braise et le titre se « décode » lettre par lettre. Au doigt, un appui choisit, le
   suivant ouvre.
-- **Fond de l'accueil** : une nappe de lumière froide venue du haut, trois faisceaux flous qui
-  oscillent lentement, et de la poussière 3D en suspension qui file quand on défile. Pas de
-  grain, pas de trame.
+- **Fond de l'accueil** : une eau profonde dessinée par un shader (bleu près de la surface,
+  noir vers le fond), des rais de lumière qui tombent de la surface, des courants lents et des
+  particules en suspension. Défiler, c'est descendre : le fond s'assombrit. Pensé pour la raie
+  manta. Pas de grain, pas de trame, pas d'orbites.
 - **Spirale des rendus** (WebGL) : les rendus préférés défilent en diagonale sur des écrans
   bombés, un cran toutes les quelques secondes. Pendant le mouvement, l'image se déchire comme
-  une cassette mal lue ; à l'arrêt elle est nette. Un clic fait entrer dans l'image : elle
+  une cassette mal lue ; à l'arrêt il reste un frémissement léger et un court décrochage de
+  temps en temps. Un clic fait entrer dans l'image : elle
   grandit jusqu'à sa place dans la visionneuse, et en ressort à la fermeture.
   La liste se règle dans `renders.ts` (`spiral`).
 - **Entrée de la salle** : volets fermés, décompte 3-2-1 d'amorce de film, les volets
@@ -75,8 +77,7 @@ jamais pour une phrase.
   écrire (contact). Jamais deux fois le même.
 - **Fil des sections** : sur grand écran, six traits sur le bord droit ; celui de la section
   à l'écran s'allonge en braise et affiche son numéro.
-- **Accueil** : cadre de visée et fiche du modèle, coordonnées et heure de Toulouse, deux
-  orbites fines autour du modèle.
+- **Accueil** : cadre de visée et fiche du modèle, coordonnées et heure de Toulouse.
 - **Couvertures animées** : quand un projet n'a pas de belle image, une petite scène codée
   (nuage d'anomalies, motif de recul) tient lieu de visuel.
 - **Navigation** : fixe, transparente, avec un dégradé noir très léger derrière. Le nom à

@@ -52,14 +52,23 @@ function Lightbox({ at, instant, onClose, onMove }: { at: number; instant?: bool
       role="dialog"
       aria-modal="true"
       aria-label={render.title}
-      className="fixed inset-0 z-[150] flex flex-col bg-ink-0/95 backdrop-blur-md"
-      initial={{ opacity: 0 }}
+      className="fixed inset-0 z-[150] flex flex-col"
+      initial={instant ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.35 } }}
-      transition={{ duration: instant ? 0.12 : 0.35 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35 }}
       data-lenis-prevent
     >
-      <div className="flex items-center justify-between gap-6 px-gutter py-5">
+      {/* Le fond arrive en fondu derrière l'image : quand on vient de la spirale, l'image du
+          carrousel reste visible dessous jusqu'à ce que celle de la visionneuse la recouvre. */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-ink-0/95 backdrop-blur-md"
+        initial={instant ? { opacity: 0 } : false}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      />
+      <div className="flex h-[72px] shrink-0 items-center justify-between gap-6 px-gutter">
         <p className="label text-fg-3">
           {String(at + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
         </p>
@@ -110,7 +119,7 @@ function Lightbox({ at, instant, onClose, onMove }: { at: number; instant?: bool
         </button>
       </div>
 
-      <div className="flex items-baseline justify-between gap-6 px-gutter py-6">
+      <div className="flex h-[76px] shrink-0 items-center justify-between gap-6 px-gutter">
         <p className="text-xl font-medium tracking-[-0.02em]">
           {render.title}
           {render.shots.length > 1 && (

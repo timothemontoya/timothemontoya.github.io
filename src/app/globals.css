@@ -141,40 +141,6 @@ body {
   to { transform: translateY(-100%); visibility: hidden; }
 }
 
-/* Fond de l'accueil : une nappe de lumière froide venue du haut à droite, noir vers le bas. */
-.hero-backdrop {
-  background:
-    linear-gradient(to top, var(--ink-0) 0%, transparent 34%),
-    radial-gradient(ellipse 85% 75% at 72% -12%, #1b1f36 0%, #0c0d16 42%, transparent 72%);
-}
-
-/* Faisceaux de projecteur : trois rais flous qui partent du même point et oscillent lentement. */
-.hero-beams {
-  inset: -25% -15% 0 -15%;
-  background: conic-gradient(
-    from 172deg at 70% 4%,
-    transparent 0deg,
-    rgb(190 204 255 / 0.17) 7deg,
-    transparent 15deg,
-    transparent 21deg,
-    rgb(190 204 255 / 0.12) 28deg,
-    transparent 38deg,
-    transparent 43deg,
-    rgb(190 204 255 / 0.08) 49deg,
-    transparent 58deg,
-    transparent 360deg
-  );
-  filter: blur(22px);
-  mask-image: linear-gradient(to bottom, #000 15%, transparent 88%);
-  transform-origin: 70% 4%;
-  animation: beams 16s ease-in-out infinite alternate;
-}
-
-@keyframes beams {
-  from { transform: rotate(-3deg); }
-  to { transform: rotate(4deg); }
-}
-
 /* Accueil : chaque lettre du nom monte depuis sous la ligne. */
 .rise-line {
   display: inline-block;
@@ -258,7 +224,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-beams { animation: none; }
   .rise { animation: none; transform: none; }
   .hud-in { animation: none; opacity: 1; }
   .hud-blink, .caret { animation: none; }
