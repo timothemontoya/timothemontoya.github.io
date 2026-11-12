@@ -27,6 +27,7 @@
   --color-ember: var(--ember);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-dots: var(--font-doto);
   --spacing-gutter: var(--gutter);
   --max-width-content: 1600px;
   --ease-out-cine: var(--ease-out);
@@ -63,6 +64,22 @@ body {
   text-transform: uppercase;
 }
 
+/* Affichage matriciel (police Doto) : numéros et mots très courts uniquement. */
+@utility dots {
+  font-family: var(--font-doto), var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 900;
+  font-variation-settings: "ROND" 100;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Trame de points discrète, à estomper avec un masque. */
+@utility dot-grid {
+  background-image: radial-gradient(circle, rgb(242 242 240 / 0.14) 1px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+
 @utility display {
   font-weight: 500;
   line-height: 0.88;
@@ -92,6 +109,44 @@ body {
   }
 }
 
+/* Écran de chargement : tout en CSS, il se retire seul même sans JavaScript. */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  background: var(--ink-0);
+  animation: preloader-out 0.7s var(--ease-out) 1.15s forwards;
+}
+
+.preloader-bar {
+  width: 10rem;
+  height: 0.75rem;
+  margin-top: 0.9rem;
+  padding: 2px;
+  border: 1px solid var(--fg-3);
+  border-radius: 999px;
+}
+
+.preloader-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--fg);
+  transform-origin: left;
+  animation: preloader-fill 1.05s var(--ease-out) forwards;
+}
+
+@keyframes preloader-fill {
+  from { transform: scaleX(0.04); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes preloader-out {
+  to { transform: translateY(-100%); visibility: hidden; }
+}
+
 /* Grain de pellicule très léger sur tout le site. */
 .grain::after {
   content: "";
@@ -115,6 +170,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .grain::after { animation: none; }
+  .preloader { display: none; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;

@@ -8,6 +8,7 @@ import { renders, type Render, type Shot } from "@/content/renders";
 import { t } from "@/content/textes";
 import { useReducedMotion } from "@/lib/use-media";
 import { asset } from "@/lib/asset";
+import { SectionLabel } from "./section-label";
 
 /** Hauteur des visuels dans le défilé horizontal. */
 const FRAME_H = "min(68vh, 720px)";
@@ -286,7 +287,7 @@ export function RenderGallery() {
         <div className={pinned ? "sticky top-0 flex h-dvh flex-col justify-center overflow-hidden" : "py-24"}>
           <div className="mx-auto mb-10 flex w-full max-w-content items-end justify-between gap-8 px-gutter">
             <div>
-              <p className="label text-fg-3">{t("rendus.etiquette")}</p>
+              <SectionLabel n="02">{t("rendus.etiquette")}</SectionLabel>
               <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
                 {t("rendus.titre")}
               </h2>

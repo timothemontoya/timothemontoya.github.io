@@ -49,6 +49,27 @@ Projets
 [menu.contact]
 Contact
 
+[menu.accueil]
+Accueil
+
+[menu.apropos]
+À propos
+
+# Bouton qui ouvre et ferme le menu plein écran
+[menu.ouvrir]
+Menu
+
+[menu.fermer]
+Fermer
+
+# Lien direct vers le contact, à côté du bouton Menu
+[menu.parler]
+On en parle
+
+# Écran de chargement (première ouverture du site)
+[chargement]
+Chargement
+
 
 # ─── Accueil : grand titre et phrases qui défilent ──────────────────────────
 
@@ -282,6 +303,97 @@ projets
 
 [projets.voir]
 Voir le projet
+
+[projets.role]
+Rôle
+
+
+# ─── Projet : Aimpex ────────────────────────────────────────────────────────
+
+[projet.aimpex.titre]
+Aimpex
+
+[projet.aimpex.sous-titre]
+Entraîneur de visée pour Apex Legends
+
+[projet.aimpex.statut]
+En cours
+
+[projet.aimpex.resume]
+Un entraîneur pour Apex Legends, codé en Python. Il lit ta sensibilité, ton champ
+de vision et tes touches dans la config du jeu, puis t'entraîne à la visée, au
+contrôle du recul et aux techniques de mouvement, avec les mêmes réglages qu'en partie.
+
+[projet.aimpex.role]
+Conception, développement, design de l'interface
+
+[projet.aimpex.technologies]
+Python, pygame, OpenGL (moderngl), PyInstaller, Inno Setup
+
+[projet.aimpex.chiffre1]
+13
+
+[projet.aimpex.chiffre1.texte]
+armes automatiques, avec leur recul mesuré en jeu
+
+[projet.aimpex.chiffre2]
+10
+
+[projet.aimpex.chiffre2.texte]
+techniques de mouvement chronométrées
+
+[projet.aimpex.chiffre3]
+5
+
+[projet.aimpex.chiffre3.texte]
+sensibilités comparées à l'aveugle pour trouver la bonne
+
+[projet.aimpex.partie1.titre]
+Les mêmes réglages qu'en jeu
+
+[projet.aimpex.partie1.texte]
+Aimpex lit le fichier de config d'Apex : sensibilité, champ de vision,
+multiplicateurs de visée et touches. La rotation suit la formule du moteur,
+0,022° par count de souris multiplié par la sensibilité, lue en entrée brute.
+Ce que la main apprend ici se retrouve en partie.
+
+[projet.aimpex.partie2.titre]
+Trouver sa sensibilité à l'aveugle
+
+[projet.aimpex.partie2.texte]
+Trois tests (flick, tracking, changement de cible) joués avec cinq sensibilités
+autour de la tienne, dans un ordre aléatoire et sans savoir laquelle est active.
+Une courbe ajustée sur les scores donne l'optimum estimé, une plage plausible et
+un niveau de confiance. Un bouton l'écrit ensuite dans la config du jeu.
+
+[projet.aimpex.partie3.titre]
+Apprendre un recul, balle par balle
+
+[projet.aimpex.partie3.texte]
+Les motifs de recul viennent de mesures faites en jeu par le projet open source
+apex-recoil. Le mode d'apprentissage tire au ralenti, avec une flèche qui montre
+où pousser la souris, puis accélère à mesure que les chargeurs sont réussis.
+Après chaque partie, un graphique montre où sont parties les balles.
+
+[projet.aimpex.partie4.titre]
+Le mouvement, à l'image près
+
+[projet.aimpex.partie4.texte]
+Slide jump, tap strafe, wall bounce, superglide : dix exercices chronométrés,
+sur une physique reprise des chiffres mesurés par la communauté. Après chaque
+tentative, l'appli dit si c'est réussi et sinon pourquoi : saut trop tôt,
+accroupi deux images trop tard.
+
+# Bloc « Télécharger » de la page du projet. Le lien du fichier se règle dans
+# src/content/projects.ts (download) : tant qu'il est vide, le bouton affiche
+# « Bientôt disponible ».
+[projet.aimpex.telechargement.titre]
+Télécharger Aimpex
+
+[projet.aimpex.telechargement.texte]
+Aimpex est encore en développement. L'installeur Windows sera disponible ici dès
+que la première version complète sera prête. Projet personnel et gratuit, sans
+lien avec Electronic Arts ni Respawn.
 
 
 # ─── Projet : Chroma Buddy ──────────────────────────────────────────────────
@@ -572,6 +684,33 @@ Technologies
 [page-projet.suivant]
 Projet suivant
 
+[telechargement.etiquette]
+Téléchargement
+
+[telechargement.bouton]
+Télécharger pour Windows
+
+[telechargement.bientot]
+Bientôt disponible
+
+
+# ─── Dons ───────────────────────────────────────────────────────────────────
+# Le bloc n'apparaît que si un lien de don est renseigné dans src/content/site.ts (don).
+
+[don.titre]
+Soutenir le projet
+
+[don.texte]
+C'est gratuit et ça le restera. Si l'outil te plaît, tu peux m'offrir un café :
+ça m'aide à y passer du temps.
+
+[don.bouton]
+Faire un don
+
+# Lien discret en bas de chaque page
+[don.lien]
+Me soutenir
+
 
 # ─── À propos ───────────────────────────────────────────────────────────────
 
@@ -638,3 +777,6 @@ Stage, projet 3D ou simple question : je réponds à tous les messages.
 
 [contact.pied]
 Fait main à Toulouse, entre Blender et VS Code
+
+[contact.droits]
+Tous droits réservés

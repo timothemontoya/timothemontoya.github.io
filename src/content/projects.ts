@@ -23,6 +23,8 @@ export type Project = {
   /** Chiffres ou faits marquants, affichés en grand. */
   facts: { value: string; label: string }[];
   sections: { title: string; body: string; media?: Media; demo?: "2048" }[];
+  /** Bloc « Télécharger » : `url` vide tant que le fichier n'est pas publié. */
+  download?: { url: string; title: string; text: string };
 };
 
 type ProjectData = {
@@ -33,9 +35,14 @@ type ProjectData = {
   facts: number;
   /** Une entrée par partie ([projet.<slug>.partieN.…]), avec son image éventuelle. */
   sections: { media?: Media; demo?: "2048" }[];
+  /**
+   * Lien de téléchargement du projet (installeur, zip…). Laisser "" tant que ce n'est pas prêt :
+   * la page affiche alors « Bientôt disponible ». Textes : [projet.<slug>.telechargement.…].
+   */
+  download?: string;
 };
 
-function withText({ slug, year, cover, facts, sections }: ProjectData): Project {
+function withText({ slug, year, cover, facts, sections, download }: ProjectData): Project {
   const k = (key: string) => `projet.${slug}.${key}`;
   return {
     slug,
@@ -49,11 +56,26 @@ function withText({ slug, year, cover, facts, sections }: ProjectData): Project 
     stack: list(k("technologies")),
     facts: Array.from({ length: facts }, (_, i) => ({ value: t(k(`chiffre${i + 1}`)), label: t(k(`chiffre${i + 1}.texte`)) })),
     sections: sections.map((s, i) => ({ ...s, title: t(k(`partie${i + 1}.titre`)), body: t(k(`partie${i + 1}.texte`)) })),
+    download: download === undefined ? undefined : { url: download, title: t(k("telechargement.titre")), text: t(k("telechargement.texte")) },
   };
 }
 
 export const projects: Project[] = (
   [
+    {
+      slug: "aimpex",
+      year: "2026",
+      cover: { type: "image", src: "/projects/aimpex/cover.jpg", alt: "Aimpex : apprentissage du recul au ralenti, avec la flèche de guidage et le trajet de la souris", ratio: 16 / 10 },
+      facts: 3,
+      sections: [
+        { media: { type: "image", src: "/projects/aimpex/menu.jpg", alt: "Menu d'Aimpex et réglages repris de la config d'Apex", ratio: 16 / 9 } },
+        { media: { type: "image", src: "/projects/aimpex/calibrage.jpg", alt: "Résultat du calibrage : sensibilité estimée et courbe de performance", ratio: 16 / 9 } },
+        { media: { type: "image", src: "/projects/aimpex/recul-bilan.jpg", alt: "Bilan d'une partie de contrôle du recul, avec la dispersion des balles", ratio: 16 / 9 } },
+        { media: { type: "image", src: "/projects/aimpex/wall-bounce.jpg", alt: "Exercice de wall bounce avec le compteur de vitesse", ratio: 16 / 9 } },
+      ],
+      // Lien de l'installeur quand il sera prêt (ex : une « release » GitHub).
+      download: "",
+    },
     {
       slug: "chroma-buddy",
       year: "2026",

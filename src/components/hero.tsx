@@ -5,7 +5,7 @@ import { easing } from "maath";
 import { type MotionValue, motion, useScroll, useTransform } from "motion/react";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
-import { models } from "@/content/models";
+import { heroSlug, models } from "@/content/models";
 import { site } from "@/content/site";
 import { fitDistance } from "@/lib/fit-distance";
 import { useInView } from "@/lib/use-in-view";
@@ -15,7 +15,7 @@ import { Model } from "./three/model";
 import { Studio } from "./three/studio";
 import { t } from "@/content/textes";
 
-const hero = models.find((m) => m.slug === "tie") ?? models[0];
+const hero = models.find((m) => m.slug === heroSlug) ?? models[0];
 
 /**
  * Trajectoire du modèle selon l'avancement du scroll (0 → 1) :
@@ -104,6 +104,11 @@ export function Hero() {
               "radial-gradient(ellipse 50% 50% at 68% 45%, rgb(139 124 246 / 0.14), transparent 70%), radial-gradient(ellipse 35% 30% at 30% 70%, rgb(255 122 61 / 0.07), transparent 70%)",
           }}
         />
+        {/* Trame de points, estompée vers les bords */}
+        <div
+          aria-hidden
+          className="dot-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_60%_at_65%_45%,#000,transparent_75%)]"
+        />
         <Canvas
           className="!absolute inset-0"
           frameloop={visible ? "always" : "never"}
@@ -150,7 +155,7 @@ export function Hero() {
             </p>
           </Beat>
 
-          <motion.p style={{ opacity: cueOpacity }} className="label absolute bottom-8 right-gutter text-fg-3">
+          <motion.p style={{ opacity: cueOpacity }} className="dots absolute bottom-8 right-gutter text-sm text-fg-2">
             {t("accueil.defiler")}
           </motion.p>
         </div>

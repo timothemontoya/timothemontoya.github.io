@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Doto, Geist, Geist_Mono } from "next/font/google";
 import { Nav } from "@/components/nav";
+import { Preloader } from "@/components/preloader";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { site } from "@/content/site";
 import "./globals.css";
@@ -15,6 +16,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Police à points pour les numéros et les très courts libellés (classe « dots »).
+const doto = Doto({
+  variable: "--font-doto",
+  subsets: ["latin"],
+  axes: ["ROND"],
+});
+
 export const metadata: Metadata = {
   title: { default: `${site.name} · ${site.role}`, template: `%s · ${site.name}` },
   description: site.pitch,
@@ -27,8 +35,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fr" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="fr" className={`${geistSans.variable} ${geistMono.variable} ${doto.variable} antialiased`}>
       <body className="grain min-h-dvh">
+        <Preloader />
         <a href="#contenu" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded focus:bg-fg focus:px-3 focus:py-2 focus:text-ink-0">
           Aller au contenu
         </a>

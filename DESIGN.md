@@ -1,8 +1,7 @@
 # DESIGN.md — Timothé Montoya
 
-Adapté de « Design System Inspired by Runway » (VoltAgent/awesome-design-md), réglé pour un
-portfolio où **la 3D est le contenu principal**. Les rendus Blender et les modèles temps réel
-remplacent la photographie cinéma de Runway.
+Un portfolio où **la 3D est le contenu principal** : les rendus Blender et les modèles temps
+réel tiennent la place qu'occupe la photographie sur un site de studio.
 
 ## 1. Atmosphère
 
@@ -12,7 +11,9 @@ Tout bouge lentement et avec inertie (scroll Lenis, interpolations `lerp`), jama
 
 Caractéristiques :
 - Rendus et modèles 3D en plein écran : c'est eux qui portent la couleur.
-- Une seule famille de police : **Geist** (Geist Mono pour les micro-étiquettes).
+- Une famille de police : **Geist** (Geist Mono pour les micro-étiquettes), plus **Doto**, une
+  police à points, réservée aux numéros et à quelques mots très courts.
+- Une trame de points discrète, toujours estompée par un masque, rappelle cette police.
 - Zéro ombre CSS. La profondeur vient de la lumière 3D, du flou et des superpositions.
 - Bordures fines `#26262a`, presque invisibles.
 - Étiquettes en capitales espacées pour structurer.
@@ -43,18 +44,31 @@ les lumières 3D, jamais en couleur d'interface.
 | Titre de carte | 1.5rem | 500 | 1.05 | -0.02em |
 | Corps | 1rem / 1.125rem | 400 | 1.5 | -0.01em |
 | Étiquette | 0.75rem mono, capitales | 400 | 1.2 | 0.08em |
+| Numéro en points (`dots`) | 0.95rem à 1.9rem, Doto | 900 | 1 | 0.06em |
+| Titre de projet (liste) | `clamp(2.25rem, 4.6vw, 4.5rem)`, capitales | 500 | 0.92 | -0.03em |
+| Entrée du menu | `clamp(2.5rem, 6.5vw, 5rem)`, minuscules | 500 | 1.05 | -0.045em |
 
-Règles : jamais de graisse supérieure à 600. Les capitales ont toujours un espacement positif.
+Règles : jamais de graisse supérieure à 600 en Geist. Les petites capitales ont toujours un
+espacement positif ; seuls les grands titres de projet sont en capitales serrées. Doto ne sert
+jamais pour une phrase.
 
 ## 4. Composants
 
 - **Boutons** : texte 14px graisse 500, bordure `--line`, rayon 999px réservé aux sélecteurs
   de la salle de projection. Les autres boutons ont un rayon de 6px. Au survol, le texte passe
   en `--fg` et la bordure s'éclaircit.
-- **Cartes projet** : l'image *est* la carte, avec un rayon de 10px et un titre posé dessous.
-  Au survol, l'image grossit lentement (scale 1.03 en 1.2s).
-- **Navigation** : fixe, transparente, avec un dégradé noir très léger derrière. Logo
-  « TM » en mono.
+- **Liste des projets** : une ligne par projet, séparée par un filet. Numéro en points, titre
+  en capitales, rôle, technologies, et l'image à droite (rayon 10px). Au survol, l'image
+  grossit lentement (scale 1.03 en 1.2s) et le numéro passe en braise.
+- **Navigation** : fixe, transparente, avec un dégradé noir très léger derrière. Le nom à
+  gauche, un lien « On en parle » et le bouton Menu à droite. Le menu s'ouvre en plein écran :
+  grandes entrées en minuscules, numérotées comme les sections, liens précédés de « > ».
+- **Écran de chargement** : le mot « Chargement » en points et une barre, un peu plus d'une
+  seconde, uniquement à l'ouverture du site. Tout en CSS.
+- **Étiquette de section** : numéro en points, filet de 32px, libellé en mono.
+- **Bloc téléchargement** : carte `--ink-1` avec la trame de points. Bouton plein quand le
+  fichier existe, pastille « Bientôt disponible » en pointillés sinon. Le bloc de dons
+  n'apparaît que si un lien est renseigné.
 - **Salle de projection** : une scène 3D plein écran, une liste de modèles en bas, un cartouche
   d'informations (nom, année, polygones) en bas à gauche, à la manière d'une fiche de musée.
 

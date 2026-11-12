@@ -7,6 +7,7 @@ import { Game2048 } from "@/components/game-2048";
 import { Media } from "@/components/media";
 import { Reveal } from "@/components/reveal";
 import { getProject, projects } from "@/content/projects";
+import { site } from "@/content/site";
 import { t } from "@/content/textes";
 
 export function generateStaticParams() {
@@ -91,11 +92,55 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
           </dl>
         </div>
 
+        {p.download && (
+          <div className="mx-auto max-w-content px-gutter pt-24 md:pt-32">
+            <Reveal className="relative overflow-hidden rounded-[10px] border border-line bg-ink-1">
+              <div aria-hidden className="dot-grid pointer-events-none absolute inset-0 [mask-image:linear-gradient(100deg,transparent_35%,#000)]" />
+              <div className="relative grid gap-10 p-8 md:grid-cols-12 md:p-12">
+                <div className="md:col-span-7">
+                  <p className="label text-fg-3">{t("telechargement.etiquette")}</p>
+                  <h2 className="mt-4 text-[clamp(1.75rem,3vw,2.75rem)] font-medium leading-[1] tracking-[-0.03em]">{p.download.title}</h2>
+                  <p className="mt-5 max-w-xl text-fg-2 text-pretty">{p.download.text}</p>
+                  <div className="mt-8">
+                    {p.download.url ? (
+                      <a
+                        href={p.download.url}
+                        className="inline-flex items-center gap-3 rounded-md bg-fg px-6 py-3.5 text-sm font-medium text-ink-0 transition-opacity duration-300 hover:opacity-85"
+                      >
+                        {t("telechargement.bouton")} <span aria-hidden>↓</span>
+                      </a>
+                    ) : (
+                      <span className="inline-flex items-center gap-3 rounded-md border border-dashed border-fg-3 px-6 py-3.5 text-sm text-fg-2">
+                        <span aria-hidden className="size-1.5 rounded-full bg-ember" />
+                        {t("telechargement.bientot")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {site.links.don && (
+                  <div className="border-t border-line pt-8 md:col-span-4 md:col-start-9 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+                    <p className="label text-fg-3">{t("don.titre")}</p>
+                    <p className="mt-4 text-fg-2 text-pretty">{t("don.texte")}</p>
+                    <a
+                      href={site.links.don}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-6 inline-flex items-center gap-2 rounded-md border border-line px-5 py-3 text-sm text-fg transition-colors duration-300 hover:border-ember hover:text-ember"
+                    >
+                      {t("don.bouton")} <span aria-hidden>↗</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+            </Reveal>
+          </div>
+        )}
+
         <div className="mx-auto flex max-w-content flex-col gap-24 px-gutter py-32 md:gap-40">
           {p.sections.map((s, k) => (
             <section key={s.title} className="grid gap-10 md:grid-cols-12">
               <Reveal className={s.media || s.demo ? "md:col-span-4" : "md:col-span-7"}>
-                <p className="label text-fg-3">{String(k + 1).padStart(2, "0")}</p>
+                <p className="dots text-lg text-fg-3">{String(k + 1).padStart(2, "0")}</p>
                 <h2 className="mt-4 text-[clamp(1.75rem,3vw,2.75rem)] font-medium leading-[1] tracking-[-0.03em]">{s.title}</h2>
                 <p className="mt-6 text-fg-2 text-pretty">{s.body}</p>
               </Reveal>

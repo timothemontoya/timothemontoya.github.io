@@ -28,6 +28,9 @@ type ModelData = Omit<Model, "name" | "caption">;
 
 const withText = (m: ModelData): Model => ({ ...m, name: t(`modele.${m.slug}.nom`), caption: t(`modele.${m.slug}.legende`) });
 
+/** Modèle qui vole dans l'en-tête de la page d'accueil (son `slug` dans la liste ci-dessous). */
+export const heroSlug = "tie";
+
 export const models: Model[] = ([
   {
     slug: "tie",

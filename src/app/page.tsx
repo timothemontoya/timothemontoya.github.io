@@ -14,6 +14,7 @@ export default function Home() {
         <ProjectionRoom
           heading={{
             id: "salle-titre",
+            index: "01",
             kicker: t("salle.etiquette"),
             title: t("salle.titre"),
             text: t("salle.texte"),

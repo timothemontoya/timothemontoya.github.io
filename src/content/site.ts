@@ -11,5 +11,7 @@ export const site = {
     github: "https://github.com/timothemontoya",
     linkedin: "https://www.linkedin.com/in/timoth%C3%A9-montoya-0761b5387",
     artstation: "", // optionnel
+    // Page de dons (Ko-fi, PayPal.me, GitHub Sponsors…). Vide = aucun bouton de don affiché.
+    don: "",
   },
 };

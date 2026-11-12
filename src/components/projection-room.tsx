@@ -12,6 +12,7 @@ import { usePointer } from "@/lib/use-pointer";
 import { fitDistance } from "@/lib/fit-distance";
 import { useReducedMotion } from "@/lib/use-media";
 import { Model, preloadModel } from "./three/model";
+import { SectionLabel } from "./section-label";
 import { Studio } from "./three/studio";
 import { t } from "@/content/textes";
 
@@ -73,7 +74,7 @@ function CameraRig({ still }: { still: boolean }) {
 type Props = {
   className?: string;
   /** Titre affiché en haut de la salle (absent sur la page /salle, plein écran). */
-  heading?: { kicker: string; title: string; text: string; id: string };
+  heading?: { index?: string; kicker: string; title: string; text: string; id: string };
 };
 
 export function ProjectionRoom({ className, heading }: Props) {
@@ -191,7 +192,7 @@ export function ProjectionRoom({ className, heading }: Props) {
         {heading && (
           <div className="mx-auto flex max-w-content items-end justify-between gap-8">
             <div>
-              <p className="label text-fg-3">{heading.kicker}</p>
+              <SectionLabel n={heading.index}>{heading.kicker}</SectionLabel>
               <h2 id={heading.id} className="mt-3 text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[0.95] tracking-[-0.035em]">
                 {heading.title}
               </h2>
