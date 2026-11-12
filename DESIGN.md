@@ -79,8 +79,7 @@ jamais pour une phrase.
   temps en temps. Un clic fait entrer dans l'image : elle
   grandit jusqu'à sa place dans la visionneuse, et en ressort à la fermeture.
   La liste se règle dans `renders.ts` (`spiral`).
-- **Entrée de la salle** : volets fermés, décompte 3-2-1 d'amorce de film, les volets
-  s'ouvrent, le faisceau s'allume en hésitant, le titre fait sa mise au point.
+- **Entrée de la salle** : volets fermés qui s'ouvrent dès que la salle arrive à l'écran, le faisceau s'allume en hésitant, le titre fait sa mise au point.
 - **Un effet de texte par étape** : le nom monte lettre par lettre (accueil), mise au point
   (salle), glitch (rendus), décodage (projets), mots allumés au scroll (à propos), machine à
   écrire (contact). Jamais deux fois le même.

@@ -75,7 +75,7 @@ const fragmentShader = /* glsl */ `
     // Salle de projection : l'encre se concentre derrière le modèle, jusqu'au magenta au centre,
     // pour qu'un modèle clair s'en détache. Les bords suivent le bruit, comme les autres taches.
     vec2 room = (p - uPool.xy) / uPool.z + (warp - 0.5) * 0.55;
-    v += uPool.w * 0.62 * exp(-dot(room, room) * 1.7);
+    v += uPool.w * 0.55 * exp(-dot(room, room) * 1.7);
 
     // La souris remue l'encre : un trait fin qui fonce légèrement la tache puis s'évapore.
     // Le bruit le déforme à peine, pour qu'il reste fluide.
@@ -84,7 +84,7 @@ const fragmentShader = /* glsl */ `
       vec2 d = (p - uTrail[i].xy) / uRes.y + (warp - 0.5) * 0.03;
       ink += uTrail[i].z * exp(-dot(d, d) * 900.0);
     }
-    v += smoothstep(0.5, 5.0, ink) * 0.2;
+    v += smoothstep(0.5, 5.0, ink) * 0.24;
     v = smoothstep(0.50, 0.82, v);
 
     // Réduction à quelques teintes, tramée.

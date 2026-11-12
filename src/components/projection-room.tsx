@@ -77,34 +77,27 @@ type Props = {
   heading?: { index?: string; kicker: string; title: string; text: string; id: string };
 };
 
-/** Durée d'un chiffre du décompte d'entrée (ms). */
-const COUNT = 420;
-
 /**
- * Entrée dans la salle, comme un début de séance : un décompte 3-2-1 d'amorce de film,
- * puis l'obturateur s'ouvre. Renvoie 0 (en attente), 1 à 3 (décompte) ou 4 (ouvert).
+ * Entrée dans la salle, comme un début de séance : l'obturateur s'ouvre dès que la salle
+ * arrive à l'écran. Renvoie vrai une fois ouvert.
  */
 function useRoomIntro(ref: RefObject<HTMLElement | null>, still: boolean) {
-  const [phase, setPhase] = useState(0);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const timers: ReturnType<typeof setTimeout>[] = [];
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         io.disconnect();
-        [1, 2, 3, 4].forEach((p, i) => timers.push(setTimeout(() => setPhase(p), i * COUNT)));
+        setOpen(true);
       },
       { threshold: 0.55 },
     );
     io.observe(el);
-    return () => {
-      io.disconnect();
-      timers.forEach(clearTimeout);
-    };
+    return () => io.disconnect();
   }, [ref]);
-  return still ? 4 : phase;
+  return still || open;
 }
 
 export function ProjectionRoom({ className, heading }: Props) {
@@ -117,8 +110,7 @@ export function ProjectionRoom({ className, heading }: Props) {
   const drag = useRef<{ id: number; x: number; y: number } | null>(null);
   const visible = useInView(container);
   const still = useReducedMotion();
-  const phase = useRoomIntro(container, still);
-  const lit = phase === 4;
+  const lit = useRoomIntro(container, still);
   const current = models[shown];
   const info = models[index];
 
@@ -288,21 +280,6 @@ export function ProjectionRoom({ className, heading }: Props) {
           lit && "scale-y-0",
         )}
       />
-      {phase > 0 && phase < 4 && (
-        <div aria-hidden className="pointer-events-none absolute inset-0 z-40 grid place-items-center">
-          <div className="relative grid size-[min(46vw,15rem)] place-items-center">
-            <span className="absolute inset-x-[-40%] top-1/2 h-px bg-line" />
-            <span className="absolute inset-y-[-40%] left-1/2 w-px bg-line" />
-            <svg viewBox="0 0 100 100" className="absolute inset-0 -rotate-90">
-              <circle cx="50" cy="50" r="48" fill="none" stroke="var(--line)" strokeWidth="0.6" />
-              <circle key={phase} className="leader-sweep" cx="50" cy="50" r="48" fill="none" stroke="var(--fg-2)" strokeWidth="0.9" pathLength={1} strokeDasharray="1" />
-            </svg>
-            <span key={phase} className="dots leader-pop text-[clamp(4rem,14vw,8rem)] text-fg">
-              {4 - phase}
-            </span>
-          </div>
-        </div>
-      )}
 
       {/* Sélecteur de modèles */}
       <nav aria-label="Choisir un modèle" className="relative z-20 pb-6 md:pb-8">
