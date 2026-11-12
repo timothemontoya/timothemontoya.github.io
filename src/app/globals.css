@@ -88,10 +88,17 @@ body {
   text-transform: uppercase;
 }
 
+/* Décalage d'impression : une passe magenta à côté de l'encre, comme sur une sérigraphie mal calée.
+   Reprend les couleurs des taches du fond pour que les titres en fassent partie. */
+@utility riso {
+  text-shadow: 0.035em 0.035em 0 rgb(201 33 230 / 0.55), -0.012em -0.012em 0 rgb(89 204 255 / 0.5);
+}
+
 @utility display {
   font-weight: 500;
   line-height: 0.88;
   letter-spacing: -0.045em;
+  text-shadow: 0.035em 0.035em 0 rgb(201 33 230 / 0.55), -0.012em -0.012em 0 rgb(89 204 255 / 0.5);
 }
 
 @utility no-scrollbar {
@@ -158,7 +165,7 @@ body {
 /* Accueil : chaque lettre du nom monte depuis sous la ligne. */
 .rise-line {
   display: inline-block;
-  clip-path: inset(-0.2em -0.1em -0.25em -0.1em);
+  clip-path: inset(-0.2em -0.15em -0.25em -0.1em);
 }
 
 .rise {

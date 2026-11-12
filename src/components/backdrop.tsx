@@ -5,10 +5,8 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useReducedMotion } from "@/lib/use-media";
 
-/** Côté de la grille de « chaleur » (une case par bloc de l'écran, 64 × 64 au maximum). */
-const GRID = 64;
-/** Taille d'un bloc en pixels : une quarantaine de blocs en largeur, jamais moins de 56px. */
-const cellSize = (width: number) => Math.max(56, Math.ceil(width / 40));
+/** Nombre de points gardés en mémoire pour la traînée d'encre de la souris. */
+const TRAIL = 16;
 
 const vertexShader = /* glsl */ `
   void main() {
@@ -21,8 +19,9 @@ const fragmentShader = /* glsl */ `
   uniform float uDpr;
   uniform float uTime;
   uniform float uScroll;
-  uniform float uCell;
-  uniform sampler2D uHeat;
+  uniform float uFocus;
+  // Traînée de la souris : position (pixels) et force de chaque point, du plus récent au plus ancien.
+  uniform vec3 uTrail[${TRAIL}];
 
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -55,72 +54,41 @@ const fragmentShader = /* glsl */ `
     return bayer2(0.5 * a) * 0.25 + bayer2(a);
   }
 
-  // Le décor en un point (pixels, origine en haut à gauche) : crème, avec des taches et des coulures
-  // violettes réduites à quelques teintes et tramées.
-  vec3 scene(vec2 q) {
-    vec2 uv = q / uRes.y;
+  void main() {
+    // Position en pixels, origine en haut à gauche.
+    vec2 p = vec2(gl_FragCoord.x, uRes.y * uDpr - gl_FragCoord.y) / uDpr;
+    vec2 uv = p / uRes.y;
     uv.y += uScroll;
+
+    // Taches : un bruit fractal déformé par lui-même. Coulures : le même bruit étiré vers le bas.
     vec2 warp = vec2(fbm(uv * 1.1 + vec2(0.0, uTime * 0.012)), fbm(uv * 1.1 + vec2(5.2, 1.3 - uTime * 0.01)));
     float stain = fbm(uv * 1.35 + warp * 1.6);
-    // Coulures : le bruit est étiré vers le bas.
     float drip = fbm(vec2(uv.x * 7.0 + warp.x * 2.0, uv.y * 0.5 - uTime * 0.015));
-    float v = smoothstep(0.50, 0.82, stain * 0.74 + drip * 0.34);
+    float v = stain * 0.74 + drip * 0.34;
 
+    // À l'accueil, une flaque se forme derrière le modèle 3D : il a l'air d'en sortir.
+    vec2 pool = (p - vec2(uRes.x * 0.66, uRes.y * 0.47)) / uRes.y;
+    v += uFocus * 0.13 * exp(-dot(pool, pool) * 5.0);
+
+    // La souris remue l'encre : là où elle passe, la tache s'épaissit puis se dissout.
+    // Le bruit déforme la traînée pour qu'elle bave comme le reste.
+    float ink = 0.0;
+    for (int i = 0; i < ${TRAIL}; i++) {
+      vec2 d = (p - uTrail[i].xy) / uRes.y + (warp - 0.5) * 0.09;
+      ink += uTrail[i].z * exp(-dot(d, d) * 70.0);
+    }
+    v += min(ink, 1.2) * 0.2;
+    v = smoothstep(0.50, 0.82, v);
+
+    // Réduction à quelques teintes, tramée.
     float levels = 4.0;
-    float vq = clamp(floor(v * levels + bayer4(q / 3.0)) / levels, 0.0, 1.0);
+    float vq = clamp(floor(v * levels + bayer4(p / 3.0)) / levels, 0.0, 1.0);
 
     vec3 col = vec3(0.957, 0.941, 0.906);
     col = mix(col, vec3(0.890, 0.835, 0.950), step(0.25, vq));
     col = mix(col, vec3(0.745, 0.560, 0.985), step(0.50, vq));
     col = mix(col, vec3(0.610, 0.240, 0.960), step(0.75, vq));
     col = mix(col, vec3(0.790, 0.130, 0.900), step(1.00, vq));
-    return col;
-  }
-
-  float heat(vec2 cell) {
-    return texture2D(uHeat, (cell + 0.5) / ${GRID.toFixed(1)}).r;
-  }
-
-  void main() {
-    vec2 p = vec2(gl_FragCoord.x, uRes.y * uDpr - gl_FragCoord.y) / uDpr;
-    vec2 ci = floor(p / uCell);
-
-    // Un bloc « chaud » se soulève vers le haut à gauche. On cherche lequel recouvre ce pixel :
-    // le sien, ou celui d'une case voisine à droite ou en dessous.
-    float top = 0.0;
-    vec2 q = p;
-    vec2 tc = ci;
-    for (int j = 0; j < 2; j++) {
-      for (int i = 0; i < 2; i++) {
-        vec2 c = ci + vec2(float(i), float(j));
-        float h = heat(c);
-        vec2 moved = p + h * uCell * vec2(0.24, 0.32);
-        if (h > 0.03 && floor(moved / uCell) == c && h > top) {
-          top = h;
-          q = moved;
-          tc = c;
-        }
-      }
-    }
-
-    vec3 col;
-    if (top > 0.0) {
-      // Dessus du bloc : le même décor en gros pixels, cerné d'un filet sombre.
-      vec2 lp = q - tc * uCell;
-      float sub = uCell / 6.0;
-      col = scene(tc * uCell + (floor(lp / sub) + 0.5) * sub);
-      col = mix(col, vec3(1.0), 0.12 * top);
-      float edge = min(min(lp.x, lp.y), min(uCell - lp.x, uCell - lp.y));
-      col = mix(vec3(0.16, 0.06, 0.32), col, smoothstep(0.0, 1.5, edge));
-    } else if (heat(ci) > 0.03) {
-      // Le vide laissé par le bloc : l'envers du décor, un quadrillage de simulation.
-      vec2 lp = p - ci * uCell;
-      float sub = uCell / 4.0;
-      float wire = min(1.0, step(fract(lp.x / sub), 0.07) + step(fract(lp.y / sub), 0.07));
-      col = mix(vec3(0.10, 0.04, 0.22), vec3(0.35, 0.80, 1.0), wire * 0.8);
-    } else {
-      col = scene(p);
-    }
 
     // Grain fixe, pour le côté imprimé.
     col += (hash(floor(p)) - 0.5) * 0.035;
@@ -130,38 +98,24 @@ const fragmentShader = /* glsl */ `
 
 function Field({ still }: { still: boolean }) {
   const material = useRef<THREE.ShaderMaterial>(null);
-  const heat = useRef<Float32Array | null>(null);
-  const ambient = useRef(0);
-
-  const uniforms = useMemo(() => {
-    const map = new THREE.DataTexture(new Uint8Array(GRID * GRID), GRID, GRID, THREE.RedFormat);
-    map.magFilter = THREE.NearestFilter;
-    map.minFilter = THREE.NearestFilter;
-    map.needsUpdate = true;
-    return {
+  const uniforms = useMemo(
+    () => ({
       uRes: { value: new THREE.Vector2(1, 1) },
       uDpr: { value: 1 },
       uTime: { value: 0 },
       uScroll: { value: 0 },
-      uCell: { value: 56 },
-      uHeat: { value: map },
-    };
-  }, []);
+      uFocus: { value: 0 },
+      uTrail: { value: Array.from({ length: TRAIL }, () => new THREE.Vector3(-9999, -9999, 0)) },
+    }),
+    [],
+  );
 
-  // La souris « chauffe » le bloc qu'elle survole, et parfois un voisin.
+  // Dernière position connue de la souris (ou du doigt), en pixels.
+  const pointer = useRef<{ x: number; y: number } | null>(null);
+  const head = useRef(0);
   useEffect(() => {
     if (still) return;
-    const grid = (heat.current ??= new Float32Array(GRID * GRID));
-    const onMove = (e: PointerEvent) => {
-      const cell = cellSize(window.innerWidth);
-      const cx = Math.floor(e.clientX / cell);
-      const cy = Math.floor(e.clientY / cell);
-      if (cx < 0 || cy < 0 || cx >= GRID || cy >= GRID) return;
-      grid[cy * GRID + cx] = 1;
-      const nx = cx + Math.round(Math.random() * 2 - 1);
-      const ny = cy + Math.round(Math.random() * 2 - 1);
-      if (Math.random() < 0.45 && nx >= 0 && ny >= 0 && nx < GRID && ny < GRID) grid[ny * GRID + nx] = Math.max(grid[ny * GRID + nx], 0.6);
-    };
+    const onMove = (e: PointerEvent) => (pointer.current = { x: e.clientX, y: e.clientY });
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
   }, [still]);
@@ -169,34 +123,31 @@ function Field({ still }: { still: boolean }) {
   useFrame((state, delta) => {
     const u = material.current?.uniforms;
     if (!u) return;
-    const dt = Math.min(0.05, delta);
     const { width, height } = state.size;
-    const cell = cellSize(width);
     u.uRes.value.set(width, height);
     u.uDpr.value = state.viewport.dpr;
-    u.uCell.value = cell;
     // Le décor suit la page, un peu moins vite qu'elle : il a l'air posé derrière.
     u.uScroll.value = (window.scrollY / height) * 0.35;
+    // La flaque derrière le modèle n'existe qu'en haut de la page d'accueil, sur grand écran.
+    const home = window.location.pathname === "/" && width >= 768;
+    u.uFocus.value = home ? Math.max(0, 1 - window.scrollY / (height * 0.9)) : 0;
     if (still) return;
+    const dt = Math.min(0.05, delta);
     u.uTime.value += dt;
 
-    const grid = (heat.current ??= new Float32Array(GRID * GRID));
-    // De temps en temps, un bloc se soulève tout seul quelque part à l'écran.
-    if ((ambient.current += dt) > 0.9) {
-      ambient.current = 0;
-      const cx = Math.floor(Math.random() * Math.min(GRID, Math.ceil(width / cell)));
-      const cy = Math.floor(Math.random() * Math.min(GRID, Math.ceil(height / cell)));
-      grid[cy * GRID + cx] = Math.max(grid[cy * GRID + cx], 0.75);
+    // Traînée : chaque point s'efface peu à peu ; un nouveau point est posé dès que la souris
+    // s'est assez éloignée du dernier (le plus ancien est recyclé).
+    const trail = u.uTrail.value as THREE.Vector3[];
+    const fade = Math.exp(-dt * 0.8);
+    for (const point of trail) point.z *= fade;
+    const at = pointer.current;
+    if (at) {
+      const last = trail[head.current];
+      if (Math.hypot(at.x - last.x, at.y - last.y) > 26) {
+        head.current = (head.current + 1) % TRAIL;
+        trail[head.current].set(at.x, at.y, 1);
+      }
     }
-    const map = u.uHeat.value as THREE.DataTexture;
-    const data = map.image.data as Uint8Array;
-    const fade = Math.exp(-dt * 1.5);
-    for (let i = 0; i < grid.length; i++) {
-      grid[i] *= fade;
-      // Courbe douce : le bloc sort vite et rentre lentement.
-      data[i] = Math.round(255 * Math.sqrt(grid[i]));
-    }
-    map.needsUpdate = true;
   });
 
   return (
@@ -208,9 +159,9 @@ function Field({ still }: { still: boolean }) {
 }
 
 /**
- * Fond de tout le site : un papier crème taché de violet, tramé comme une impression,
- * dont les blocs se soulèvent au passage de la souris et laissent voir un quadrillage,
- * comme si le décor n'était qu'une simulation. Fixe derrière le contenu.
+ * Fond de tout le site : un papier crème taché de violet, réduit à quelques teintes et tramé
+ * comme une impression. Fixe derrière le contenu, il dérive très lentement, et la souris y
+ * laisse une traînée d'encre qui se dissout.
  */
 export function Backdrop() {
   const still = useReducedMotion();

@@ -18,6 +18,11 @@ export function Studio({ keyColor = "#ffffff", shadow = true }: { keyColor?: str
         <Lightformer form="rect" intensity={1.4} color={keyColor} position={[6, 1, 0]} rotation-y={-Math.PI / 2} scale={[8, 2, 1]} />
         <Lightformer form="rect" intensity={0.8} position={[-6, 1, 1]} rotation-y={Math.PI / 2} scale={[8, 1, 1]} />
         <Lightformer form="ring" intensity={1.5} position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={3} />
+        {/* Les couleurs du fond du site, pour que les surfaces brillantes les reflètent. */}
+        <Lightformer form="rect" intensity={2.4} color="#c921e6" position={[5, -2, 3]} rotation-y={-Math.PI / 3} scale={[6, 3, 1]} />
+        <Lightformer form="rect" intensity={2} color="#7a1fe6" position={[-5, -1, 3]} rotation-y={Math.PI / 3} scale={[6, 4, 1]} />
+        <Lightformer form="rect" intensity={1.6} color="#f4f0e7" position={[0, -5, 0]} rotation-x={-Math.PI / 2} scale={[12, 12, 1]} />
+        <Lightformer form="rect" intensity={1.2} color="#f4f0e7" position={[0, 0, 7]} rotation-y={Math.PI} scale={[10, 5, 1]} />
       </Environment>
       {shadow && <ContactShadows position={[0, -1.35, 0]} opacity={0.55} scale={8} blur={2.6} far={3} />}
     </>

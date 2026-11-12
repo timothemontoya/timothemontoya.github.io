@@ -229,7 +229,7 @@ export function ProjectionRoom({ className, heading }: Props) {
               <h2
                 id={heading.id}
                 className={cn(
-                  "mt-3 text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[0.95] tracking-[-0.035em] transition-[filter,opacity,letter-spacing] delay-500 duration-[1500ms] ease-out-cine",
+                  "riso mt-3 text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[0.95] tracking-[-0.035em] transition-[filter,opacity,letter-spacing] delay-500 duration-[1500ms] ease-out-cine",
                   !lit && "tracking-[0.14em] opacity-0 blur-[14px]",
                 )}
               >
@@ -258,7 +258,7 @@ export function ProjectionRoom({ className, heading }: Props) {
               <p className="label text-fg-3">
                 {String(index + 1).padStart(2, "0")} / {String(models.length).padStart(2, "0")} · {info.year}
               </p>
-              <h3 className="mt-2 text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-[0.95] tracking-[-0.035em]">{info.name}</h3>
+              <h3 className="riso mt-2 text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-[0.95] tracking-[-0.035em]">{info.name}</h3>
               <p className="mt-2 text-sm text-fg-2 text-pretty md:text-base">{info.caption}</p>
             </motion.div>
           </AnimatePresence>

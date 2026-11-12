@@ -65,7 +65,7 @@ export function ProjectsSection() {
       <Reveal className="flex items-end justify-between gap-8">
         <div>
           <SectionLabel n="03">{t("projets.etiquette")}</SectionLabel>
-          <h2 id="projets-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+          <h2 id="projets-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em] riso">
             {t("projets.titre")}
           </h2>
         </div>
@@ -95,7 +95,7 @@ export function ProjectsSection() {
                 <span
                   className={cn(
                     "min-w-0 flex-1 text-[clamp(1.9rem,3.9vw,3.75rem)] font-medium uppercase leading-[0.95] tracking-[-0.03em] transition-[color,transform] duration-500 ease-out-cine",
-                    i === active ? "translate-x-2 text-fg" : "text-fg-3 group-hover:text-fg-2",
+                    i === active ? "riso translate-x-2 text-fg" : "text-fg-3 group-hover:text-fg-2",
                   )}
                 >
                   <Decode text={q.title} active={i === active} />

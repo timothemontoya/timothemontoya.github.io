@@ -159,7 +159,7 @@ function Timeline({ onOpen }: { onOpen: (ri: number) => void }) {
           <p className="label text-fg-3">
             {years[0][0]} → {years[years.length - 1][0]}
           </p>
-          <h2 id="evolution-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+          <h2 id="evolution-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em] riso">
             {t("evolution.titre")}
           </h2>
         </div>
@@ -244,7 +244,7 @@ export function RenderGallery() {
           <div className="mx-auto flex w-full max-w-content flex-wrap items-end justify-between gap-x-8 gap-y-4 px-gutter">
             <div>
               <SectionLabel n="02">{t("rendus.etiquette")}</SectionLabel>
-              <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+              <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em] riso">
                 {t("rendus.titre")}
               </h2>
             </div>

@@ -38,7 +38,8 @@ export const models: Model[] = ([
     year: 2023,
     rotation: [0.08, -0.5, 0],
     key: "#8b7cf6",
-    finish: { color: "#8a8f99", metalness: 0.55, roughness: 0.36 },
+    // Chrome clair : il reflète les panneaux violets et magenta du studio, donc les couleurs du fond.
+    finish: { color: "#f3f0fa", metalness: 1, roughness: 0.17 },
   },
   {
     slug: "maison",
