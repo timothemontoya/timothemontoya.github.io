@@ -5,16 +5,17 @@ réel tiennent la place qu'occupe la photographie sur un site de studio.
 
 ## 1. Atmosphère
 
-Une feuille imprimée qui se révèle être une simulation. Fond crème taché de violet, tramé comme
-une sérigraphie ; les blocs du fond se soulèvent au passage de la souris et laissent voir un
-quadrillage. Les rendus, les scènes animées et la visionneuse sont des écrans sombres posés sur
+Une feuille imprimée encore humide. Fond crème taché de violet, tramé comme une sérigraphie ;
+la souris y remue l'encre. Les titres portent un décalage d'impression magenta et cyan, et le
+modèle 3D de l'accueil, en chrome, reflète les couleurs des taches. Les rendus, les scènes animées et la visionneuse sont des écrans sombres posés sur
 cette page claire. Les titres restent serrés et très grands, tout bouge avec inertie.
 
 Caractéristiques :
 - Rendus et modèles 3D en grand : avec les taches violettes, ce sont eux qui portent la couleur.
 - Une famille de police : **Geist** (Geist Mono pour les micro-étiquettes), plus **Doto**, une
   police à points, réservée aux numéros et à quelques mots très courts.
-- Zéro ombre CSS. La profondeur vient de la 3D, du flou et des blocs qui sortent du fond.
+- Zéro ombre portée. La profondeur vient de la 3D et du flou ; la seule « ombre » de texte est
+  le décalage d'impression des titres (classe `riso`, incluse dans `display`).
 - Filets fins, encre à 17 % d'opacité : ils tiennent aussi bien sur le crème que sur le violet.
 - Étiquettes en capitales espacées pour structurer.
 
@@ -32,7 +33,7 @@ Caractéristiques :
 | Accent violet | `--accent` | `#7a1fe6` |
 
 Taches du fond, du plus clair au plus dense : lilas `#e3d5f2`, violet `#be8ffb`, violet vif
-`#9c3df5`, magenta `#c921e6`. Le cyan `#59ccff` n'apparaît que dans le quadrillage sous les blocs.
+`#9c3df5`, magenta `#c921e6`. Le cyan `#59ccff` n'apparaît que dans le décalage d'impression des titres.
 
 La classe `screen` redonne les mêmes jetons en version nuit (fond `#050506`, texte `#f2f2f0`,
 accent `#cf6bff`) : elle s'applique à la visionneuse, aux scènes animées et au 2048.
@@ -67,8 +68,10 @@ jamais pour une phrase.
   suivant ouvre.
 - **Fond du site** (`backdrop.tsx`) : un seul shader fixe derrière toutes les pages. Taches et
   coulures violettes en bruit fractal, réduites à quatre teintes et tramées (matrice de Bayer),
-  grain fixe. Il suit la page un peu moins vite qu'elle. Les blocs survolés se soulèvent, en
-  gros pixels, et retombent lentement ; de temps en temps un bloc se soulève tout seul.
+  grain fixe. Il suit la page un peu moins vite qu'elle. La souris laisse une traînée d'encre
+  qui bave puis se dissout. À l'accueil, une flaque se forme derrière le modèle 3D.
+- **Modèle de l'accueil** : finition chrome clair ; le studio 3D contient des panneaux violet,
+  magenta et crème pour qu'il reflète le fond.
   Aucun rai de lumière ni orbite à l'accueil : seulement de la poussière violette en 3D.
 - **Spirale des rendus** (WebGL) : les rendus préférés défilent en diagonale sur des écrans
   bombés, un cran toutes les quelques secondes. Pendant le mouvement, l'image se déchire comme
