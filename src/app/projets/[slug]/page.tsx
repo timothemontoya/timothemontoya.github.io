@@ -47,7 +47,7 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
             </Link>
             <p className="label mt-10 flex gap-3 text-fg-3">
               <span>{p.year}</span>
-              {p.status && <span className="text-ember">{p.status}</span>}
+              {p.status && <span className="text-accent">{p.status}</span>}
             </p>
             <h1 className="display mt-5 text-[clamp(3rem,10vw,9rem)]">{p.title}</h1>
             <p className="mt-6 text-[clamp(1.25rem,2vw,1.75rem)] tracking-[-0.02em] text-fg-2">{p.kicker}</p>
@@ -110,7 +110,7 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
                       </a>
                     ) : (
                       <span className="inline-flex items-center gap-3 rounded-md border border-dashed border-fg-3 px-6 py-3.5 text-sm text-fg-2">
-                        <span aria-hidden className="size-1.5 rounded-full bg-ember" />
+                        <span aria-hidden className="size-1.5 rounded-full bg-accent" />
                         {t("telechargement.bientot")}
                       </span>
                     )}
@@ -124,7 +124,7 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
                       href={site.links.don}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-6 inline-flex items-center gap-2 rounded-md border border-line px-5 py-3 text-sm text-fg transition-colors duration-300 hover:border-ember hover:text-ember"
+                      className="mt-6 inline-flex items-center gap-2 rounded-md border border-line px-5 py-3 text-sm text-fg transition-colors duration-300 hover:border-accent hover:text-accent"
                     >
                       {t("don.bouton")} <span aria-hidden>↗</span>
                     </a>
@@ -163,7 +163,7 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
           <div className="mx-auto flex max-w-content items-end justify-between gap-8 px-gutter py-20 md:py-28">
             <div>
               <p className="label text-fg-3">{t("page-projet.suivant")}</p>
-              <p className="display mt-4 text-[clamp(2.5rem,7vw,6rem)] transition-colors duration-500 group-hover:text-ember">{next.title}</p>
+              <p className="display mt-4 text-[clamp(2.5rem,7vw,6rem)] transition-colors duration-500 group-hover:text-accent">{next.title}</p>
             </div>
             <span aria-hidden className="text-4xl text-fg-3 transition-transform duration-500 group-hover:translate-x-2">→</span>
           </div>

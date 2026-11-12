@@ -52,7 +52,7 @@ function Lightbox({ at, instant, onClose, onMove }: { at: number; instant?: bool
       role="dialog"
       aria-modal="true"
       aria-label={render.title}
-      className="fixed inset-0 z-[150] flex flex-col"
+      className="screen fixed inset-0 z-[150] flex flex-col"
       initial={instant ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -170,7 +170,7 @@ function Timeline({ onOpen }: { onOpen: (ri: number) => void }) {
 
       <ol className="relative mt-16 md:mt-24">
         {/* Le fil de la frise */}
-        <span aria-hidden className="absolute bottom-0 left-[5px] top-2 w-px bg-gradient-to-b from-line via-fg-3 to-ember md:left-[calc(16.666%-1px)]" />
+        <span aria-hidden className="absolute bottom-0 left-[5px] top-2 w-px bg-gradient-to-b from-line via-fg-3 to-accent md:left-[calc(16.666%-1px)]" />
         {years.map(([year, items]) => (
           <li key={year} className="relative grid gap-6 pb-16 pl-8 last:pb-0 md:grid-cols-6 md:gap-10 md:pl-0">
             <span aria-hidden className="absolute left-0 top-2.5 size-[11px] rounded-full border border-fg-3 bg-ink-0 md:left-[calc(16.666%-6px)]" />

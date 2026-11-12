@@ -66,14 +66,14 @@ const stuck = (g: Grid) => (["left", "right", "up", "down"] as Dir[]).every((d) 
 const tone: Record<number, string> = {
   2: "bg-ink-2 text-fg",
   4: "bg-[#24222a] text-fg",
-  8: "bg-[#5a3220] text-fg",
-  16: "bg-[#7a3a1e] text-fg",
-  32: "bg-[#a2461f] text-fg",
-  64: "bg-[#c95320] text-fg",
-  128: "bg-[#ff7a3d] text-ink-0",
-  256: "bg-[#ff9a5e] text-ink-0",
-  512: "bg-[#ffb47f] text-ink-0",
-  1024: "bg-[#ffd0a6] text-ink-0",
+  8: "bg-[#3a2260] text-fg",
+  16: "bg-[#52299a] text-fg",
+  32: "bg-[#6a2fd0] text-fg",
+  64: "bg-[#8a3cf0] text-fg",
+  128: "bg-[#a855f7] text-ink-0",
+  256: "bg-[#c084fc] text-ink-0",
+  512: "bg-[#d8b4fe] text-ink-0",
+  1024: "bg-[#ecdcff] text-ink-0",
   2048: "bg-fg text-ink-0",
 };
 
@@ -146,7 +146,7 @@ export function Game2048() {
         onTouchEnd={onTouchEnd}
         onClick={() => board.current?.focus()}
         data-lenis-prevent
-        className="relative grid touch-none select-none grid-cols-4 gap-2 rounded-[14px] border border-line bg-ink-1 p-2 outline-none focus-visible:border-ember"
+        className="screen relative grid touch-none select-none grid-cols-4 gap-2 rounded-[14px] border border-line bg-ink-1 p-2 outline-none focus-visible:border-accent"
       >
         {grid.flat().map((v, i) => (
           <div key={i} className="relative aspect-square rounded-[8px] bg-ink-0/70">

@@ -34,7 +34,7 @@ export function HeroHud({ model, year }: { model: string; year: number }) {
         <span className="absolute bottom-0 left-0 h-4 w-4 border-b border-l border-fg-3" />
         <span className="absolute bottom-0 right-0 h-4 w-4 border-b border-r border-fg-3" />
         <p className="label absolute -top-6 left-0 flex items-center gap-3 text-fg-3">
-          <i className="hud-blink size-1.5 rounded-full bg-ember" />
+          <i className="hud-blink size-1.5 rounded-full bg-accent" />
           {t("accueil.hud.modele")} · <span className="text-fg-2">{model}</span>
         </p>
         <p className="label absolute -bottom-6 right-0 text-fg-3">

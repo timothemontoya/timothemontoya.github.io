@@ -56,13 +56,13 @@ function Cloud({ still }: { still: boolean }) {
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[normal, 3]} />
         </bufferGeometry>
-        <pointsMaterial size={0.035} color="#c9d0ff" transparent opacity={0.8} sizeAttenuation depthWrite={false} />
+        <pointsMaterial size={0.035} color="#d9dbe6" transparent opacity={0.8} sizeAttenuation depthWrite={false} />
       </points>
       <points>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[anomalies, 3]} />
         </bufferGeometry>
-        <pointsMaterial size={0.07} color="#ff7a3d" sizeAttenuation depthWrite={false} />
+        <pointsMaterial size={0.07} color="#cf6bff" sizeAttenuation depthWrite={false} />
       </points>
       <gridHelper args={[4.4, 11, "#2a2a30", "#1a1a1f"]} position-y={-1.3} />
     </group>
@@ -74,7 +74,7 @@ export function AnomalyCloud({ label }: { label: string }) {
   const visible = useInView(ref);
   const still = useReducedMotion();
   return (
-    <div ref={ref} className="absolute inset-0" role="img" aria-label={label}>
+    <div ref={ref} className="screen absolute inset-0" role="img" aria-label={label}>
       <div
         aria-hidden
         className="absolute inset-0"
@@ -85,10 +85,10 @@ export function AnomalyCloud({ label }: { label: string }) {
       </Canvas>
       <div className="label pointer-events-none absolute bottom-5 left-5 flex gap-5 text-fg-2">
         <span className="flex items-center gap-2">
-          <i className="size-2 rounded-full bg-[#c9d0ff]" /> Normal
+          <i className="size-2 rounded-full bg-[#d9dbe6]" /> Normal
         </span>
         <span className="flex items-center gap-2">
-          <i className="size-2 rounded-full bg-ember" /> Anomalie
+          <i className="size-2 rounded-full bg-accent" /> Anomalie
         </span>
       </div>
     </div>

@@ -89,7 +89,7 @@ export function ProjectsSection() {
                 }}
                 className="group flex items-baseline gap-4 py-5 md:py-6"
               >
-                <span className={cn("dots w-9 shrink-0 text-lg transition-colors duration-500", i === active ? "text-ember" : "text-fg-3")}>
+                <span className={cn("dots w-9 shrink-0 text-lg transition-colors duration-500", i === active ? "text-accent" : "text-fg-3")}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span
@@ -132,7 +132,7 @@ export function ProjectsSection() {
                 <div>
                   <p className="label flex flex-wrap gap-x-3 gap-y-1 text-fg-3">
                     <span>{p.kicker}</span>
-                    {p.status && <span className="text-ember">{p.status}</span>}
+                    {p.status && <span className="text-accent">{p.status}</span>}
                   </p>
                   <p className="mt-4 text-fg-2 text-pretty">{p.summary}</p>
                 </div>

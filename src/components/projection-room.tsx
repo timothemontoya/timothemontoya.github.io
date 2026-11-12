@@ -186,7 +186,7 @@ export function ProjectionRoom({ className, heading }: Props) {
   const endDrag = () => (drag.current = null);
 
   return (
-    <div ref={container} className={cn("relative isolate flex h-svh min-h-[560px] flex-col overflow-hidden bg-ink-0", className)}>
+    <div ref={container} className={cn("relative isolate flex h-svh min-h-[560px] flex-col overflow-hidden", className)}>
       {/* Halo de projecteur derrière le modèle */}
       <div
         aria-hidden

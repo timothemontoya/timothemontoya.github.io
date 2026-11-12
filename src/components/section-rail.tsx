@@ -60,7 +60,7 @@ export function SectionRail() {
               <span
                 className={cn(
                   "block h-px transition-[width,background-color] duration-500 ease-out-cine",
-                  i === active ? "w-6 bg-ember" : "w-2.5 bg-fg-3 group-hover:w-4 group-hover:bg-fg-2",
+                  i === active ? "w-6 bg-accent" : "w-2.5 bg-fg-3 group-hover:w-4 group-hover:bg-fg-2",
                 )}
               />
             </a>

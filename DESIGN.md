@@ -5,34 +5,39 @@ réel tiennent la place qu'occupe la photographie sur un site de studio.
 
 ## 1. Atmosphère
 
-Une salle de projection. Fond noir profond, interface quasi invisible, l'image et la 3D occupent
-l'écran. Les titres ressemblent à des génériques de film : serrés, très grands, interlignage 0.9–1.0.
-Tout bouge lentement et avec inertie (scroll Lenis, interpolations `lerp`), jamais de rebond.
+Une feuille imprimée qui se révèle être une simulation. Fond crème taché de violet, tramé comme
+une sérigraphie ; les blocs du fond se soulèvent au passage de la souris et laissent voir un
+quadrillage. Les rendus, les scènes animées et la visionneuse sont des écrans sombres posés sur
+cette page claire. Les titres restent serrés et très grands, tout bouge avec inertie.
 
 Caractéristiques :
-- Rendus et modèles 3D en plein écran : c'est eux qui portent la couleur.
+- Rendus et modèles 3D en grand : avec les taches violettes, ce sont eux qui portent la couleur.
 - Une famille de police : **Geist** (Geist Mono pour les micro-étiquettes), plus **Doto**, une
   police à points, réservée aux numéros et à quelques mots très courts.
-- Zéro ombre CSS. La profondeur vient de la lumière 3D, du flou et des superpositions.
-- Bordures fines `#26262a`, presque invisibles.
+- Zéro ombre CSS. La profondeur vient de la 3D, du flou et des blocs qui sortent du fond.
+- Filets fins, encre à 17 % d'opacité : ils tiennent aussi bien sur le crème que sur le violet.
 - Étiquettes en capitales espacées pour structurer.
 
 ## 2. Couleurs
 
 | Rôle | Token | Valeur |
 |---|---|---|
-| Fond | `--ink-0` | `#050506` |
-| Surface | `--ink-1` | `#0d0d10` |
-| Surface relevée | `--ink-2` | `#16161a` |
-| Bordure | `--line` | `#26262a` |
-| Texte principal | `--fg` | `#f2f2f0` |
-| Texte secondaire | `--fg-2` | `#9a9ca3` (gris froid) |
-| Texte discret | `--fg-3` | `#5d6068` |
-| Accent « braise » | `--ember` | `#ff7a3d` |
+| Fond (papier) | `--ink-0` | `#f4f0e7` |
+| Surface | `--ink-1` | `#ece7db` |
+| Surface relevée | `--ink-2` | `#e1dbcd` |
+| Filet | `--line` | encre à 17 % |
+| Texte principal | `--fg` | `#15121b` |
+| Texte secondaire | `--fg-2` | `#37323f` |
+| Texte discret | `--fg-3` | `#5f5968` |
+| Accent violet | `--accent` | `#7a1fe6` |
 
-L'accent braise vient de la lumière du rendu « Donjon ». Il sert seulement à l'état actif, au
-focus et à un mot par écran au maximum. Le violet « nébuleuse » (`#8b7cf6`) n'existe que dans
-les lumières 3D, jamais en couleur d'interface.
+Taches du fond, du plus clair au plus dense : lilas `#e3d5f2`, violet `#be8ffb`, violet vif
+`#9c3df5`, magenta `#c921e6`. Le cyan `#59ccff` n'apparaît que dans le quadrillage sous les blocs.
+
+La classe `screen` redonne les mêmes jetons en version nuit (fond `#050506`, texte `#f2f2f0`,
+accent `#cf6bff`) : elle s'applique à la visionneuse, aux scènes animées et au 2048.
+
+L'accent sert à l'état actif, au focus et à un mot par écran au maximum.
 
 ## 3. Typographie
 
@@ -58,12 +63,13 @@ jamais pour une phrase.
   en `--fg` et la bordure s'éclaircit.
 - **Explorateur de projets** : la liste des titres en capitales à gauche, le projet actif à
   droite (visuel, résumé, rôle, technologies). Le survol d'un titre l'active : son numéro passe
-  en braise et le titre se « décode » lettre par lettre. Au doigt, un appui choisit, le
+  en violet et le titre se « décode » lettre par lettre. Au doigt, un appui choisit, le
   suivant ouvre.
-- **Fond de l'accueil** : une eau profonde dessinée par un shader (bleu près de la surface,
-  noir vers le fond), des rais de lumière qui tombent de la surface, des courants lents et des
-  particules en suspension. Défiler, c'est descendre : le fond s'assombrit. Pensé pour la raie
-  manta. Pas de grain, pas de trame, pas d'orbites.
+- **Fond du site** (`backdrop.tsx`) : un seul shader fixe derrière toutes les pages. Taches et
+  coulures violettes en bruit fractal, réduites à quatre teintes et tramées (matrice de Bayer),
+  grain fixe. Il suit la page un peu moins vite qu'elle. Les blocs survolés se soulèvent, en
+  gros pixels, et retombent lentement ; de temps en temps un bloc se soulève tout seul.
+  Aucun rai de lumière ni orbite à l'accueil : seulement de la poussière violette en 3D.
 - **Spirale des rendus** (WebGL) : les rendus préférés défilent en diagonale sur des écrans
   bombés, un cran toutes les quelques secondes. Pendant le mouvement, l'image se déchire comme
   une cassette mal lue ; à l'arrêt il reste un frémissement léger et un court décrochage de
@@ -76,7 +82,7 @@ jamais pour une phrase.
   (salle), glitch (rendus), décodage (projets), mots allumés au scroll (à propos), machine à
   écrire (contact). Jamais deux fois le même.
 - **Fil des sections** : sur grand écran, six traits sur le bord droit ; celui de la section
-  à l'écran s'allonge en braise et affiche son numéro.
+  à l'écran s'allonge en violet et affiche son numéro.
 - **Accueil** : cadre de visée et fiche du modèle, coordonnées et heure de Toulouse.
 - **Couvertures animées** : quand un projet n'a pas de belle image, une petite scène codée
   (nuage d'anomalies, motif de recul) tient lieu de visuel.
@@ -109,6 +115,6 @@ jamais pour une phrase.
 
 ## 7. À faire / À éviter
 
-À faire : montrer le travail en grand, laisser respirer, des légendes en mono, du noir vrai.
+À faire : montrer le travail en grand, laisser respirer, des légendes en mono, des écrans sombres sur papier clair.
 À éviter : ombres portées, dégradés décoratifs dans l'UI, jauges de compétence en %,
 jargon « RPG », plus d'un accent coloré par écran.

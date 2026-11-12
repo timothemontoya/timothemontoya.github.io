@@ -18,7 +18,7 @@ export function ContactSection() {
         <Reveal>
           <SectionLabel n="05">{t("contact.etiquette")}</SectionLabel>
           <h2 className="display mt-6 text-[clamp(3rem,9vw,8.5rem)]">
-            <Typewriter text={t("contact.titre")} suffix={<span className="text-ember">?</span>} />
+            <Typewriter text={t("contact.titre")} suffix={<span className="text-accent">?</span>} />
           </h2>
           <p className="mt-8 max-w-lg text-lg text-fg-2 text-pretty">
             {t("contact.texte")}

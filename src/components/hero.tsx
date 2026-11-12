@@ -13,7 +13,6 @@ import { usePointer } from "@/lib/use-pointer";
 import { useReducedMotion } from "@/lib/use-media";
 import { LetterRise } from "./effects";
 import { HeroHud } from "./hero-hud";
-import { Abyss } from "./three/abyss";
 import { Dust } from "./three/dust";
 import { Model } from "./three/model";
 import { Studio } from "./three/studio";
@@ -109,7 +108,6 @@ export function Hero() {
           aria-hidden
         >
           <Studio keyColor={hero.key} shadow={false} />
-          <Abyss progress={scrollYProgress} still={still} />
           <Dust progress={scrollYProgress} still={still} />
           <Suspense fallback={null}>
             <Flying progress={scrollYProgress} still={still} />
@@ -136,7 +134,7 @@ export function Hero() {
           </motion.div>
 
           <Beat progress={scrollYProgress} range={[0.22, 0.32, 0.5, 0.6]} className="absolute inset-x-gutter bottom-[22vh] max-w-xl">
-            <p className="label text-ember">{t("accueil.phrase1.etiquette")}</p>
+            <p className="label text-accent">{t("accueil.phrase1.etiquette")}</p>
             <p className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-medium leading-[0.98] tracking-[-0.035em]">
               {t("accueil.phrase1")}
             </p>
@@ -147,7 +145,7 @@ export function Hero() {
             range={[0.62, 0.72, 0.92, 1]}
             className="absolute bottom-[22vh] right-gutter max-w-xl text-right"
           >
-            <p className="label text-ember">{t("accueil.phrase2.etiquette")}</p>
+            <p className="label text-accent">{t("accueil.phrase2.etiquette")}</p>
             <p className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-medium leading-[0.98] tracking-[-0.035em]">
               {t("accueil.phrase2")}
             </p>

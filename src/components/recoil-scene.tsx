@@ -16,7 +16,7 @@ const SLOW = 2.4;
 const HOLD = 2200;
 const SPAN = 295;
 const BULLET = "#c9d0ff";
-const MOUSE = "#ff7a3d";
+const MOUSE = "#cf6bff";
 
 /**
  * Couverture animée d'Aimpex : à gauche les balles partent comme en jeu,
@@ -141,11 +141,11 @@ export function RecoilScene({ label }: { label: string }) {
   }, [visible, still]);
 
   return (
-    <div ref={wrap} className="absolute inset-0 bg-[#08080a]" role="img" aria-label={label}>
+    <div ref={wrap} className="screen absolute inset-0 bg-[#08080a]" role="img" aria-label={label}>
       <div
         aria-hidden
         className="absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 45% 60% at 73% 45%, rgb(255 122 61 / 0.09), transparent 70%)" }}
+        style={{ background: "radial-gradient(ellipse 45% 60% at 73% 45%, rgb(207 107 255 / 0.10), transparent 70%)" }}
       />
       <canvas ref={canvas} aria-hidden className="absolute inset-0 h-full w-full" />
       <div className="label pointer-events-none absolute inset-x-5 top-5 flex justify-between text-fg-3">
@@ -157,7 +157,7 @@ export function RecoilScene({ label }: { label: string }) {
           <i className="size-2 rounded-full bg-[#c9d0ff]" /> Recul
         </span>
         <span className="flex items-center gap-2">
-          <i className="size-2 rounded-full bg-ember" /> Souris
+          <i className="size-2 rounded-full bg-accent" /> Souris
         </span>
       </div>
     </div>

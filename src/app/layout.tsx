@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Doto, Geist, Geist_Mono } from "next/font/google";
+import { Backdrop } from "@/components/backdrop";
 import { Nav } from "@/components/nav";
 import { Preloader } from "@/components/preloader";
 import { SmoothScroll } from "@/components/smooth-scroll";
@@ -29,14 +30,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050506",
-  colorScheme: "dark",
+  themeColor: "#f4f0e7",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${geistSans.variable} ${geistMono.variable} ${doto.variable} antialiased`}>
       <body className="min-h-dvh">
+        <Backdrop />
         <Preloader />
         <a href="#contenu" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded focus:bg-fg focus:px-3 focus:py-2 focus:text-ink-0">
           Aller au contenu

@@ -52,7 +52,7 @@ export function Nav() {
           <div className="mx-auto flex max-w-content items-center justify-between px-gutter py-5">
             <Link href="/" onClick={close} className="label text-fg" aria-label={`Accueil, ${site.name}`}>
               {site.name}
-              <span className="text-ember">.</span>
+              <span className="text-accent">.</span>
             </Link>
             <div className="flex items-center gap-6 md:gap-10">
               <Link
@@ -102,7 +102,7 @@ export function Nav() {
                       className="border-t border-line"
                     >
                       <Link href={item.href} onClick={close} className="group flex items-baseline justify-between gap-6 py-3">
-                        <span className="text-[clamp(2.5rem,6.5vw,5rem)] font-medium lowercase leading-[1.05] tracking-[-0.045em] transition-[color,padding] duration-500 group-hover:pl-3 group-hover:text-ember">
+                        <span className="text-[clamp(2.5rem,6.5vw,5rem)] font-medium lowercase leading-[1.05] tracking-[-0.045em] transition-[color,padding] duration-500 group-hover:pl-3 group-hover:text-accent">
                           {item.label}
                         </span>
                         <span className="dots text-base text-fg-3 md:text-xl">{String(i).padStart(2, "0")}</span>

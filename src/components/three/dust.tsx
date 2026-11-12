@@ -43,12 +43,12 @@ const fragmentShader = /* glsl */ `
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float a = smoothstep(0.5, 0.0, d);
-    gl_FragColor = vec4(0.80, 0.85, 1.0, a * a * vAlpha);
+    gl_FragColor = vec4(0.42, 0.14, 0.86, a * a * vAlpha);
   }
 `;
 
 /**
- * Poussière en suspension dans la lumière : des centaines de grains flous, plus gros
+ * Poussière violette en suspension : des centaines de grains flous, plus gros
  * quand ils sont près de la caméra. Donne de la profondeur derrière et devant le modèle.
  */
 export function Dust({ progress, still, count = 520 }: { progress?: MotionValue<number>; still: boolean; count?: number }) {
@@ -89,7 +89,6 @@ export function Dust({ progress, still, count = 520 }: { progress?: MotionValue<
         uniforms={uniforms}
         transparent
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
       />
     </points>
   );
