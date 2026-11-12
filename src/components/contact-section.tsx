@@ -18,10 +18,6 @@ export function ContactSection() {
         className="pointer-events-none absolute inset-0"
         style={{ background: "radial-gradient(ellipse 60% 70% at 50% 120%, rgb(255 122 61 / 0.16), transparent 70%)" }}
       />
-      <div
-        aria-hidden
-        className="dot-grid pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_top,#000,transparent_60%)]"
-      />
       <div className="relative mx-auto max-w-content px-gutter pb-10 pt-32 md:pt-48">
         <Reveal>
           <SectionLabel n="05">{t("contact.etiquette")}</SectionLabel>

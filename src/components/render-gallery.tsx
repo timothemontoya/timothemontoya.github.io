@@ -2,16 +2,13 @@
 
 import Image from "next/image";
 import { useLenis } from "lenis/react";
-import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { renders, type Render, type Shot } from "@/content/renders";
+import { renders, spiral, type Render, type Shot } from "@/content/renders";
 import { t } from "@/content/textes";
-import { useReducedMotion } from "@/lib/use-media";
 import { asset } from "@/lib/asset";
+import { RenderSpiral } from "./render-spiral";
 import { SectionLabel } from "./section-label";
-
-/** Hauteur des visuels dans le défilé horizontal. */
-const FRAME_H = "min(68vh, 720px)";
 
 /** Toutes les vues à la suite, pour naviguer de l'une à l'autre en plein écran. */
 const slides = renders.flatMap((r, ri) => r.shots.map((shot, si) => ({ render: r, shot, ri, si })));
@@ -21,38 +18,6 @@ function ShotMedia({ shot, alt, sizes, priority, className }: { shot: Shot; alt:
     <Image src={asset(shot.src)} alt={alt} fill sizes={sizes} priority={priority} className={className} />
   ) : (
     <video src={asset(shot.src)} aria-label={alt} className={className} autoPlay muted loop playsInline preload="metadata" />
-  );
-}
-
-function Frame({ item, index, onOpen }: { item: Render; index: number; onOpen: () => void }) {
-  const cover = item.shots[0];
-  return (
-    <figure className="group shrink-0" style={{ width: `calc(${FRAME_H} * ${cover.ratio})` }}>
-      <button
-        type="button"
-        onClick={onOpen}
-        aria-label={`Voir « ${item.title} » en grand${item.shots.length > 1 ? `, ${item.shots.length} vues` : ""}`}
-        className="relative block w-full cursor-zoom-in overflow-hidden rounded-[10px] bg-ink-1"
-        style={{ height: FRAME_H }}
-      >
-        <ShotMedia
-          shot={cover}
-          alt={`${item.title}, ${item.note}`}
-          sizes="(max-width: 768px) 90vw, 60vw"
-          priority={index < 2}
-          className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out-cine group-hover:scale-[1.03]"
-        />
-        {item.shots.length > 1 && (
-          <span className="label absolute right-3 top-3 rounded-full bg-ink-0/70 px-3 py-1.5 text-fg backdrop-blur-sm">
-            {item.shots.length} {t("rendus.vues")}
-          </span>
-        )}
-      </button>
-      <figcaption className="mt-4 flex items-baseline justify-between gap-6">
-        <span className="text-lg font-medium tracking-[-0.02em]">{item.title}</span>
-        <span className="label text-fg-3">{item.note}</span>
-      </figcaption>
-    </figure>
   );
 }
 
@@ -232,34 +197,13 @@ function Timeline({ onOpen }: { onOpen: (ri: number) => void }) {
   );
 }
 
-/**
- * Défilé horizontal piloté par le scroll vertical (desktop).
- * Sur mobile ou avec « réduire les animations », simple liste verticale.
- */
-export function RenderGallery() {
-  const section = useRef<HTMLElement>(null);
-  const track = useRef<HTMLDivElement>(null);
-  const [distance, setDistance] = useState(0);
-  const [wide, setWide] = useState(false);
-  const [open, setOpen] = useState<number | null>(null);
-  const still = useReducedMotion();
-  const lenis = useLenis();
-  const pinned = wide && !still;
+/** Rendus du carrousel en spirale, dans l'ordre choisi dans renders.ts. */
+const featured = spiral.map((id) => renders.find((r) => r.id === id)).filter((r): r is Render => Boolean(r));
 
-  useEffect(() => {
-    const measure = () => {
-      setWide(window.innerWidth >= 768);
-      if (track.current) setDistance(Math.max(0, track.current.scrollWidth - window.innerWidth));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (track.current) ro.observe(track.current);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
+/** Les rendus préférés en spirale, puis la frise de tous les rendus. Clic : visionneuse plein écran. */
+export function RenderGallery() {
+  const [open, setOpen] = useState<number | null>(null);
+  const lenis = useLenis();
 
   // La page ne défile pas derrière la visionneuse.
   useEffect(() => {
@@ -270,48 +214,21 @@ export function RenderGallery() {
 
   const onClose = useCallback(() => setOpen(null), []);
   const onMove = useCallback((delta: number) => setOpen((o) => (o === null ? o : (o + delta + slides.length) % slides.length)), []);
-
-  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -distance]);
+  const openRender = useCallback((id: string) => setOpen(slides.findIndex((s) => s.render.id === id)), []);
 
   return (
     <>
-      <section
-        ref={section}
-        id="rendus"
-        data-snap
-        aria-labelledby="rendus-titre"
-        className="relative"
-        style={pinned ? { height: `calc(100vh + ${distance}px)` } : undefined}
-      >
-        <div className={pinned ? "sticky top-0 flex h-dvh flex-col justify-center overflow-hidden" : "py-24"}>
-          <div className="mx-auto mb-10 flex w-full max-w-content items-end justify-between gap-8 px-gutter">
-            <div>
-              <SectionLabel n="02">{t("rendus.etiquette")}</SectionLabel>
-              <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
-                {t("rendus.titre")}
-              </h2>
-            </div>
-            <p className="max-w-sm text-fg-2 text-pretty">
-              {t("rendus.texte")}
-            </p>
+      <section id="rendus" data-snap aria-labelledby="rendus-titre" className="relative overflow-hidden pb-16 pt-28 md:pt-32">
+        <div className="mx-auto flex w-full max-w-content flex-wrap items-end justify-between gap-8 px-gutter">
+          <div>
+            <SectionLabel n="02">{t("rendus.etiquette")}</SectionLabel>
+            <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em]">
+              {t("rendus.titre")}
+            </h2>
           </div>
-          <motion.div
-            ref={track}
-            style={pinned ? { x } : undefined}
-            className={
-              pinned
-                ? "flex w-max gap-6 px-gutter will-change-transform"
-                : "mx-auto flex max-w-content flex-col gap-12 px-gutter [&_figure]:!w-full [&_figure>button]:!h-auto [&_figure>button]:aspect-[var(--r)]"
-            }
-          >
-            {renders.map((item, i) => (
-              <div key={item.title} style={{ ["--r" as string]: String(item.shots[0].ratio) }} className={pinned ? undefined : "w-full"}>
-                <Frame item={item} index={i} onOpen={() => setOpen(slides.findIndex((s) => s.ri === i))} />
-              </div>
-            ))}
-          </motion.div>
+          <p className="max-w-sm text-fg-2 text-pretty">{t("rendus.texte")}</p>
         </div>
+        <RenderSpiral items={featured} onOpen={openRender} />
       </section>
 
       <Timeline onOpen={(ri) => setOpen(slides.findIndex((sl) => sl.ri === ri))} />

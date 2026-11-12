@@ -13,7 +13,6 @@ Caractéristiques :
 - Rendus et modèles 3D en plein écran : c'est eux qui portent la couleur.
 - Une famille de police : **Geist** (Geist Mono pour les micro-étiquettes), plus **Doto**, une
   police à points, réservée aux numéros et à quelques mots très courts.
-- Une trame de points discrète, toujours estompée par un masque, rappelle cette police.
 - Zéro ombre CSS. La profondeur vient de la lumière 3D, du flou et des superpositions.
 - Bordures fines `#26262a`, presque invisibles.
 - Étiquettes en capitales espacées pour structurer.
@@ -57,16 +56,25 @@ jamais pour une phrase.
 - **Boutons** : texte 14px graisse 500, bordure `--line`, rayon 999px réservé aux sélecteurs
   de la salle de projection. Les autres boutons ont un rayon de 6px. Au survol, le texte passe
   en `--fg` et la bordure s'éclaircit.
-- **Liste des projets** : une ligne par projet, séparée par un filet. Numéro en points, titre
-  en capitales, rôle, technologies, et l'image à droite (rayon 10px). Au survol, l'image
-  grossit lentement (scale 1.03 en 1.2s) et le numéro passe en braise.
+- **Explorateur de projets** : la liste des titres en capitales à gauche, le projet actif à
+  droite (visuel, résumé, rôle, technologies). Le survol d'un titre l'active : son numéro passe
+  en braise et le titre se « décode » lettre par lettre. Au doigt, un appui choisit, le
+  suivant ouvre.
+- **Fond de l'accueil** : une nappe de lumière froide venue du haut, trois faisceaux flous qui
+  oscillent lentement, et de la poussière 3D en suspension qui file quand on défile. Pas de
+  grain, pas de trame.
+- **Spirale des rendus** : les rendus préférés posés le long d'une hélice inclinée, qui avance
+  d'un cran toutes les quelques secondes. Glisser pour tourner, cliquer pour ouvrir en grand.
+  La liste se règle dans `renders.ts` (`spiral`).
+- **Couvertures animées** : quand un projet n'a pas de belle image, une petite scène codée
+  (nuage d'anomalies, motif de recul) tient lieu de visuel.
 - **Navigation** : fixe, transparente, avec un dégradé noir très léger derrière. Le nom à
   gauche, un lien « On en parle » et le bouton Menu à droite. Le menu s'ouvre en plein écran :
   grandes entrées en minuscules, numérotées comme les sections, liens précédés de « > ».
 - **Écran de chargement** : le mot « Chargement » en points et une barre, un peu plus d'une
   seconde, uniquement à l'ouverture du site. Tout en CSS.
 - **Étiquette de section** : numéro en points, filet de 32px, libellé en mono.
-- **Bloc téléchargement** : carte `--ink-1` avec la trame de points. Bouton plein quand le
+- **Bloc téléchargement** : carte `--ink-1`. Bouton plein quand le
   fichier existe, pastille « Bientôt disponible » en pointillés sinon. Le bloc de dons
   n'apparaît que si un lien est renseigné.
 - **Salle de projection** : une scène 3D plein écran, une liste de modèles en bas, un cartouche

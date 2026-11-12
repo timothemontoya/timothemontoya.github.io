@@ -29,6 +29,12 @@ type RenderData = Omit<Render, "title" | "note">;
 
 const withText = (r: RenderData): Render => ({ ...r, title: t(`rendu.${r.id}.titre`), note: t(`rendu.${r.id}.note`) });
 
+/**
+ * Rendus mis en avant dans le carrousel en spirale (leur `id`, dans l'ordre d'apparition).
+ * Tous les rendus restent visibles dans la frise « Évolution ».
+ */
+export const spiral = ["nebuleuse", "seuil", "chambre", "chaudron", "egouts", "liminal", "comptoir", "prise", "gameboy"];
+
 export const renders: Render[] = ([
   {
     id: "nebuleuse", date: "2026-09", approx: true,

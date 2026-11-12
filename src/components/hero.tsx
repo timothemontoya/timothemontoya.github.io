@@ -11,6 +11,7 @@ import { fitDistance } from "@/lib/fit-distance";
 import { useInView } from "@/lib/use-in-view";
 import { usePointer } from "@/lib/use-pointer";
 import { useReducedMotion } from "@/lib/use-media";
+import { Dust } from "./three/dust";
 import { Model } from "./three/model";
 import { Studio } from "./three/studio";
 import { t } from "@/content/textes";
@@ -96,19 +97,9 @@ export function Hero() {
   return (
     <section ref={section} aria-label="Présentation" className="relative h-[320vh]">
       <div className="sticky top-0 h-dvh overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 50% 50% at 68% 45%, rgb(139 124 246 / 0.14), transparent 70%), radial-gradient(ellipse 35% 30% at 30% 70%, rgb(255 122 61 / 0.07), transparent 70%)",
-          }}
-        />
-        {/* Trame de points, estompée vers les bords */}
-        <div
-          aria-hidden
-          className="dot-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_60%_60%_at_65%_45%,#000,transparent_75%)]"
-        />
+        {/* Lumière de projecteur : une nappe venue du haut et des faisceaux qui balaient lentement. */}
+        <div aria-hidden className="hero-backdrop pointer-events-none absolute inset-0" />
+        <div aria-hidden className="hero-beams pointer-events-none absolute" />
         <Canvas
           className="!absolute inset-0"
           frameloop={visible ? "always" : "never"}
@@ -118,6 +109,7 @@ export function Hero() {
           aria-hidden
         >
           <Studio keyColor={hero.key} shadow={false} />
+          <Dust progress={scrollYProgress} still={still} />
           <Suspense fallback={null}>
             <Flying progress={scrollYProgress} still={still} />
           </Suspense>

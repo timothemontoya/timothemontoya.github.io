@@ -8,7 +8,7 @@ export type Media =
   | { type: "image"; src: string; alt: string; ratio: number; fit?: "contain"; pixel?: boolean }
   | { type: "video"; src: string; alt: string; ratio: number }
   /** Scène 3D temps réel codée dans le site (voir components/media.tsx). */
-  | { type: "scene"; scene: "anomalies"; alt: string; ratio: number };
+  | { type: "scene"; scene: "anomalies" | "recul"; alt: string; ratio: number };
 
 export type Project = {
   slug: string;
@@ -65,7 +65,7 @@ export const projects: Project[] = (
     {
       slug: "aimpex",
       year: "2026",
-      cover: { type: "image", src: "/projects/aimpex/cover.jpg", alt: "Aimpex : apprentissage du recul au ralenti, avec la flèche de guidage et le trajet de la souris", ratio: 16 / 10 },
+      cover: { type: "scene", scene: "recul", alt: "Recul de la R-301 balle par balle, et le trajet de la souris qui le compense", ratio: 16 / 9 },
       facts: 3,
       sections: [
         { media: { type: "image", src: "/projects/aimpex/menu.jpg", alt: "Menu d'Aimpex et réglages repris de la config d'Apex", ratio: 16 / 9 } },
@@ -75,13 +75,6 @@ export const projects: Project[] = (
       ],
       // Lien de l'installeur quand il sera prêt (ex : une « release » GitHub).
       download: "",
-    },
-    {
-      slug: "chroma-buddy",
-      year: "2026",
-      cover: { type: "image", src: "/projects/chroma-buddy.svg", alt: "Interface de debrief de Chroma Buddy", ratio: 16 / 10 },
-      facts: 3,
-      sections: [{}, {}, {}],
     },
     {
       slug: "maintenance-predictive",

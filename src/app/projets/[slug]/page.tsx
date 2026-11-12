@@ -95,7 +95,6 @@ async function Project({ params }: { params: PageProps<"/projets/[slug]">["param
         {p.download && (
           <div className="mx-auto max-w-content px-gutter pt-24 md:pt-32">
             <Reveal className="relative overflow-hidden rounded-[10px] border border-line bg-ink-1">
-              <div aria-hidden className="dot-grid pointer-events-none absolute inset-0 [mask-image:linear-gradient(100deg,transparent_35%,#000)]" />
               <div className="relative grid gap-10 p-8 md:grid-cols-12 md:p-12">
                 <div className="md:col-span-7">
                   <p className="label text-fg-3">{t("telechargement.etiquette")}</p>

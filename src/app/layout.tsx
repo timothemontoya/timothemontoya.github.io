@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${geistSans.variable} ${geistMono.variable} ${doto.variable} antialiased`}>
-      <body className="grain min-h-dvh">
+      <body className="min-h-dvh">
         <Preloader />
         <a href="#contenu" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded focus:bg-fg focus:px-3 focus:py-2 focus:text-ink-0">
           Aller au contenu

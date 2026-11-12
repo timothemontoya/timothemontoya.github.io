@@ -91,10 +91,6 @@ export function Nav() {
               transition={{ duration: still ? 0 : 0.7, ease }}
               className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-ink-0"
             >
-              <div
-                aria-hidden
-                className="dot-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_70%_70%_at_85%_20%,#000,transparent_75%)]"
-              />
               <div className="relative mx-auto flex w-full max-w-content flex-1 flex-col justify-between gap-12 px-gutter pb-10 pt-28">
                 <ul className="border-b border-line">
                   {items.map((item, i) => (

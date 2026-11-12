@@ -1,12 +1,13 @@
 import Image from "next/image";
 import type { Media as MediaType } from "@/content/projects";
 import { cn } from "@/lib/utils";
+import { RecoilScene } from "./recoil-scene";
 import { AnomalyCloud } from "./three/anomaly-cloud";
 import { asset } from "@/lib/asset";
 
 export function Media({ media, className, sizes = "100vw", priority }: { media: MediaType; className?: string; sizes?: string; priority?: boolean }) {
   if (media.type === "scene") {
-    return <AnomalyCloud label={media.alt} />;
+    return media.scene === "recul" ? <RecoilScene label={media.alt} /> : <AnomalyCloud label={media.alt} />;
   }
   if (media.type === "video") {
     return (
