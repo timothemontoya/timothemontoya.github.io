@@ -1,7 +1,6 @@
 "use client";
 
-import { useTexture } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useLenis } from "lenis/react";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
@@ -10,9 +9,13 @@ import { t } from "@/content/textes";
 import { asset } from "@/lib/asset";
 import { useInView } from "@/lib/use-in-view";
 import { useReducedMotion } from "@/lib/use-media";
+import { useSiteReady } from "@/lib/site-ready";
+import { Warmup, useWarmup } from "./three/warmup";
 
-/** Temps de pose sur un rendu avant de passer seul au suivant (s). */
-const PAUSE = 4;
+/** Vitesse de la rotation continue du carrousel (rendus par seconde). */
+const DRIFT = 0.28;
+/** Après un geste, temps de pose sur le rendu recentré avant que la rotation reprenne (s). */
+const HOLD = 1.5;
 /** Durée du zoom d'entrée dans une image (s). */
 const ZOOM = 0.9;
 /** Marge de la géométrie autour de l'image : les lignes décalées par le glitch peuvent en déborder. */
@@ -27,14 +30,17 @@ type Motion = {
   dragging: boolean;
   x: number;
   moved: number;
-  paused: boolean;
   /** Vrai tant que le carrousel n'occupe pas l'écran : il attend alors sur le premier rendu. */
   away: boolean;
-  idle: number;
+  /** Vitesse actuelle de la rotation automatique, et temps de pose restant avant qu'elle reprenne. */
+  speed: number;
+  hold: number;
   /** Zoom dans une image : index, sens (1 entre, -1 ressort, 0 au repos) et avancement 0 → 1. */
   zoomI: number;
   zoomDir: number;
   zoom: number;
+  /** Marge du bas de Safari, mesurée au premier zoom. */
+  safe?: number;
 };
 
 const vertexShader = /* glsl */ `
@@ -101,6 +107,16 @@ const smooth = (x: number) => {
 };
 const mix = (a: number, b: number, k: number) => a + (b - a) * k;
 
+/** Marge du bas réservée à la barre de Safari sur iPhone (env(safe-area-inset-bottom)), en pixels. */
+function safeBottom() {
+  const probe = document.createElement("div");
+  probe.style.cssText = "position:fixed;visibility:hidden;height:env(safe-area-inset-bottom)";
+  document.body.appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
+}
+
 function Planes({
   items,
   getMotion,
@@ -120,7 +136,27 @@ function Planes({
   onEnter: (id: string) => void;
   onPick: (i: number) => void;
 }) {
-  const textures = useTexture(items.map((item) => asset(item.src)));
+  // useLoader et non useTexture de drei : ce dernier envoie toutes les images d'un coup.
+  const textures = useLoader(THREE.TextureLoader, items.map((item) => asset(item.src)));
+  // Envoie les images à la carte graphique dès leur arrivée plutôt qu'au premier passage à
+  // l'écran. Une par une, chacune décodée en arrière-plan d'abord (decode()) : sinon le
+  // navigateur la décode d'un bloc au moment de l'envoi, et la page accroche.
+  const gl = useThree((s) => s.gl);
+  useEffect(() => {
+    let stop = false;
+    (async () => {
+      for (const tex of textures) {
+        const img = tex.image as HTMLImageElement | undefined;
+        await img?.decode?.().catch(() => {});
+        await new Promise((r) => requestAnimationFrame(r));
+        if (stop) return;
+        gl.initTexture(tex);
+      }
+    })();
+    return () => {
+      stop = true;
+    };
+  }, [textures, gl]);
   const meshes = useRef<(THREE.Mesh | null)[]>([]);
   const shown = useRef(-1);
   const n = items.length;
@@ -144,11 +180,17 @@ function Planes({
     const m = getMotion();
     const dt = Math.min(0.05, delta);
 
-    // Avance automatique d'un cran, sauf pendant un geste ou un zoom.
-    if (still || m.away || m.dragging || m.paused || m.zoom > 0 || m.zoomDir !== 0) m.idle = 0;
-    else if ((m.idle += dt) > PAUSE) {
-      m.idle = 0;
-      m.target = Math.round(m.target) + 1;
+    // Rotation continue, arrêtée pendant un geste ou un zoom. Après un geste, le rendu choisi
+    // se recentre, reste HOLD secondes de face, puis la rotation repart en douceur.
+    if (still || m.away || m.dragging || m.zoom > 0 || m.zoomDir !== 0) {
+      m.speed = 0;
+      m.hold = HOLD;
+    } else if (m.hold > 0) {
+      m.speed = 0;
+      if (Math.abs(m.target - m.p) < 0.03) m.hold -= dt;
+    } else {
+      m.speed += (DRIFT - m.speed) * (1 - Math.exp(-dt * 1.2));
+      m.target += m.speed * dt;
     }
     const before = m.p;
     m.p += (m.target - m.p) * (still ? 1 : 1 - Math.exp(-dt * (m.dragging ? 14 : 3.4)));
@@ -168,7 +210,8 @@ function Planes({
     const { width: vw, height: vh } = state.viewport;
     const rect = state.gl.domElement.getBoundingClientRect();
     const unit = vw / rect.width;
-    const lag = still ? 0 : THREE.MathUtils.clamp(m.vel * 0.45, -1, 1);
+    // Le glitch suit les gestes, pas la rotation automatique (sinon il ne s'arrêterait jamais).
+    const lag = still ? 0 : THREE.MathUtils.clamp((m.vel - m.speed) * 0.45, -1, 1);
 
     for (let i = 0; i < n; i++) {
       const mesh = meshes.current[i];
@@ -194,11 +237,12 @@ function Planes({
       if (zooming) {
         // Entrée dans l'image : elle vient occuper exactement la place qu'elle aura dans la visionneuse.
         // Mêmes mesures que la visionneuse (render-gallery.tsx) : bandeau de 72px, pied de 76px,
-        // largeur sans la barre de défilement. Sans cela l'image sauterait de quelques pixels au relais.
+        // largeur sans la barre de défilement, marge de Safari en bas. Sans cela l'image sauterait
+        // de quelques pixels au relais.
         const gutter = Math.min(48, Math.max(16, window.innerWidth * 0.04));
         const page = document.documentElement.clientWidth;
         const top = 72;
-        const bottom = window.innerHeight - 76;
+        const bottom = window.innerHeight - 76 - (m.safe ??= safeBottom());
         const tw = Math.min(page - gutter * 2, (bottom - top) * ratio);
         w = mix(w, tw * unit, e);
         h = mix(h, (tw / ratio) * unit, e);
@@ -280,10 +324,13 @@ export function RenderSpiral({
 }) {
   const stage = useRef<HTMLDivElement>(null);
   const chrome = useRef<HTMLDivElement>(null);
-  const motion = useRef<Motion>({ p: 0, target: 0, vel: 0, dragging: false, x: 0, moved: 0, paused: false, away: true, idle: 0, zoomI: -1, zoomDir: 0, zoom: 0 });
+  const motion = useRef<Motion>({ p: 0, target: 0, vel: 0, dragging: false, x: 0, moved: 0, away: true, speed: 0, hold: HOLD, zoomI: -1, zoomDir: 0, zoom: 0 });
   const [front, setFront] = useState(0);
   const visible = useInView(stage);
   const still = useReducedMotion();
+  // Les images du carrousel attendent l'ouverture du site : elles ne retardent pas l'accueil.
+  const siteReady = useSiteReady();
+  const warm = useWarmup(1800);
   const lenis = useLenis();
 
   // Couverture de chaque rendu : sa première image fixe (les vidéos restent dans la visionneuse).
@@ -306,8 +353,11 @@ export function RenderSpiral({
   };
 
   const step = (delta: number) => {
-    if (motion.current.zoom > 0) return;
-    motion.current.target = Math.round(motion.current.target) + delta;
+    const m = motion.current;
+    if (m.zoom > 0) return;
+    m.target = Math.round(m.target) + delta;
+    m.speed = 0;
+    m.hold = HOLD;
   };
 
   const pick = (i: number) => {
@@ -364,8 +414,9 @@ export function RenderSpiral({
     const onUp = () => {
       if (!m.dragging) return;
       m.dragging = false;
-      // Au relâchement, le rendu le plus proche vient se placer de face.
+      // Au relâchement, le rendu le plus proche vient se placer de face, et y reste un instant.
       if (m.moved > 6) m.target = Math.round(m.target);
+      m.hold = HOLD;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerup", onUp);
@@ -394,14 +445,10 @@ export function RenderSpiral({
         m.x = e.clientX;
         m.moved = 0;
       }}
-      onPointerEnter={(e) => {
-        if (e.pointerType === "mouse") motion.current.paused = true;
-      }}
-      onPointerLeave={() => (motion.current.paused = false)}
     >
       <Canvas
         className="!absolute inset-0"
-        frameloop={visible ? "always" : "never"}
+        frameloop={visible ? "always" : warm ? "demand" : "never"}
         dpr={[1, 1.75]}
         flat
         camera={{ position: [0, 0, 9], fov: 35 }}
@@ -409,11 +456,12 @@ export function RenderSpiral({
         aria-hidden
       >
         <Suspense fallback={null}>
-          <Planes items={items} getMotion={getMotion} still={still} onZoom={onZoom} onFront={setFront} onEnter={onOpen} onPick={pick} />
+          {siteReady && <Planes items={items} getMotion={getMotion} still={still} onZoom={onZoom} onFront={setFront} onEnter={onOpen} onPick={pick} />}
+          {siteReady && <Warmup active={warm && !visible} />}
         </Suspense>
       </Canvas>
 
-      <div ref={chrome} className="pointer-events-none absolute inset-0 flex flex-col justify-between pb-8 pt-24 md:pt-28">
+      <div ref={chrome} className="pointer-events-none absolute inset-0 flex flex-col justify-between pb-[calc(2rem+env(safe-area-inset-bottom))] pt-24 md:pt-28">
         <div>{children}</div>
         <div className="mx-auto flex w-full max-w-content items-end justify-between gap-6 px-gutter">
           <div aria-live="polite">
@@ -424,6 +472,11 @@ export function RenderSpiral({
               {current.title}
             </p>
             <p className="label mt-2 text-fg-3">{current.note}</p>
+            {/* Sur téléphone, rappel des deux gestes possibles. */}
+            <p className="label mt-3 flex items-center gap-2 text-accent md:hidden">
+              <i aria-hidden className="hud-blink size-1.5 rounded-full bg-accent" />
+              {t("rendus.aide.mobile")}
+            </p>
           </div>
           <div className="pointer-events-auto flex shrink-0 items-center gap-3">
             <p className="label mr-3 hidden text-fg-3 md:block">{t("rendus.aide")}</p>

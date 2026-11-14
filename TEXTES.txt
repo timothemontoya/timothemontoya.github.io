@@ -187,7 +187,10 @@ Bague sertie d'une gemme taillée, étude de shading cartoon.
 Library Blender
 
 [rendus.titre]
-Rendus
+Rendus 
+
+[rendus.glissez]
+← GLISSEZ →
 
 [rendus.texte]
 Lumière, brouillard, cadrage. Chaque rendu cherche son ambiance, épique ou décalée.
@@ -198,6 +201,10 @@ vues
 
 [rendus.aide]
 Glisser · cliquer pour entrer
+
+# Rappel affiché sur téléphone, sous le titre du rendu
+[rendus.aide.mobile]
+Glisse · touche une image pour l'ouvrir
 
 
 # ─── Rendus (titre + petite note) ───────────────────────────────────────────
@@ -691,6 +698,22 @@ Classe préparatoire scientifique
 
 [apropos.parcours2.detail]
 Thiers, Marseille. Maths, physique, algorithmique
+
+# Après le parcours : projet de mobilité et engagement civique
+[apropos.mobilite.titre]
+Projet de mobilité
+
+[apropos.mobilite.texte]
+J'aimerais partir un semestre étudier à l'étranger, en Belgique, en Allemagne ou en Espagne,
+pour suivre des cours d'informatique, en particulier de vision par ordinateur et de 3D, et
+découvrir une autre manière d'apprendre et de travailler.
+
+[apropos.engagement.titre]
+Engagement civique
+
+[apropos.engagement.texte]
+J'aimerais m'engager auprès des personnes dans le besoin, par exemple en participant à des
+collectes alimentaires avec une association comme les Restos du Cœur ou la Banque alimentaire.
 
 [apropos.outils.titre]
 Outils

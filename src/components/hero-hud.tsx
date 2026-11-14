@@ -28,7 +28,7 @@ export function HeroHud({ model, year }: { model: string; year: number }) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
       {/* Cadre de visée autour du modèle */}
-      <div className="hud-in absolute left-[46%] top-[17%] h-[60%] w-[40%]" style={{ animationDelay: "1.9s" }}>
+      <div className="hud-in absolute left-[46%] top-[17%] h-[60%] w-[40%]" style={{ animationDelay: "0.8s" }}>
         <span className="absolute left-0 top-0 h-4 w-4 border-l border-t border-fg-3" />
         <span className="absolute right-0 top-0 h-4 w-4 border-r border-t border-fg-3" />
         <span className="absolute bottom-0 left-0 h-4 w-4 border-b border-l border-fg-3" />
@@ -43,7 +43,7 @@ export function HeroHud({ model, year }: { model: string; year: number }) {
       </div>
 
       {/* Position et heure locale */}
-      <p className="hud-in label absolute right-gutter top-24 text-right leading-[1.7] text-fg-3" style={{ animationDelay: "2.1s" }}>
+      <p className="hud-in label absolute right-gutter top-24 text-right leading-[1.7] text-fg-3" style={{ animationDelay: "1.0s" }}>
         43.6047° N · 1.4442° E
         <br />
         Toulouse · <span className="dots text-[0.8rem] text-fg-2"><LocalTime /></span>

@@ -3,7 +3,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { AnimatePresence, motion } from "motion/react";
-import { type RefObject, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { type RefObject, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { models, type Model as ModelInfo } from "@/content/models";
 import { cn } from "@/lib/utils";
@@ -11,9 +11,11 @@ import { useInView } from "@/lib/use-in-view";
 import { usePointer } from "@/lib/use-pointer";
 import { fitDistance } from "@/lib/fit-distance";
 import { useReducedMotion } from "@/lib/use-media";
-import { Model, preloadModel } from "./three/model";
+import { useSiteReady } from "@/lib/site-ready";
+import { fetchModel, Model, useModelLoading } from "./three/model";
 import { SectionLabel } from "./section-label";
 import { Studio } from "./three/studio";
+import { holdLoading, Warmup } from "./three/warmup";
 import { t } from "@/content/textes";
 
 /** Durée de la sortie d'un modèle avant l'entrée du suivant, en secondes. */
@@ -78,8 +80,8 @@ type Props = {
 };
 
 /**
- * Entrée dans la salle, comme un début de séance : l'obturateur s'ouvre dès que la salle
- * arrive à l'écran. Renvoie vrai une fois ouvert.
+ * Entrée dans la salle, comme un début de séance : la lampe s'allume et le titre se met au point
+ * dès que la salle arrive à l'écran. Renvoie vrai une fois allumée.
  */
 function useRoomIntro(ref: RefObject<HTMLElement | null>, still: boolean) {
   const [open, setOpen] = useState(false);
@@ -119,7 +121,7 @@ export function ProjectionRoom({ className, heading }: Props) {
       const i = (next + models.length) % models.length;
       if (i === index) return;
       setIndex(i);
-      preloadModel(models[i].file);
+      void fetchModel(models[i].file);
       setLeaving(true);
     },
     [index],
@@ -142,10 +144,36 @@ export function ProjectionRoom({ className, heading }: Props) {
     if (ul && el) ul.scrollTo({ left: el.offsetLeft - ul.clientWidth / 2 + el.clientWidth / 2, behavior: "smooth" });
   }, [index]);
 
-  // Précharge tous les modèles dès que la salle approche de l'écran : le changement est instantané.
+  // Précharge les modèles un par un quand la salle approche (à moins d'un écran et demi),
+  // une fois le site ouvert : le premier arrive vite au lieu de partager le réseau avec tous
+  // les autres, et le changement de modèle est ensuite instantané.
+  const siteReady = useSiteReady();
+  const near = useInView(container, "150% 0px");
+  const preloading = useRef(false);
   useEffect(() => {
-    if (visible) models.forEach((m) => preloadModel(m.file));
-  }, [visible]);
+    if (!siteReady || !near || preloading.current) return;
+    preloading.current = true;
+    (async () => {
+      for (const m of models) await fetchModel(m.file);
+    })();
+  }, [siteReady, near]);
+
+  // Scène préparée pendant l'écran de chargement (voir warmup.tsx) : pas d'accroc à la première
+  // entrée dans la salle. Au-delà de quelques secondes, l'écran de chargement n'attend plus.
+  const release = useRef<(() => void) | null>(null);
+  useLayoutEffect(() => {
+    const free = holdLoading();
+    release.current = free;
+    const t = setTimeout(free, 5000);
+    return () => {
+      clearTimeout(t);
+      free();
+    };
+  }, []);
+  const warmed = useCallback(() => release.current?.(), []);
+
+  // Modèle choisi encore en route : petite barre de chargement, sans pourcentage (null quand il est prêt).
+  const loading = useModelLoading(info.file);
 
   // Flèches du clavier quand la salle est à l'écran.
   useEffect(() => {
@@ -200,7 +228,7 @@ export function ProjectionRoom({ className, heading }: Props) {
         onPointerCancel={endDrag}
       >
         <Canvas
-          frameloop={visible ? "always" : "never"}
+          frameloop={visible ? "always" : "demand"}
           dpr={[1, 1.75]}
           shadows
           camera={{ position: [0, 0.35, 7], fov: 30 }}
@@ -210,6 +238,7 @@ export function ProjectionRoom({ className, heading }: Props) {
           <Studio keyColor={current.key} />
           <Suspense fallback={null}>
             <Exhibit key={current.slug} model={current} leaving={leaving} still={still} poses={poses} />
+            <Warmup active onDone={warmed} />
           </Suspense>
           <CameraRig still={still} />
         </Canvas>
@@ -262,27 +291,25 @@ export function ProjectionRoom({ className, heading }: Props) {
         </div>
       </div>
 
+      {/* Chargement du modèle choisi (les plus lourds, comme le chaudron, prennent quelques secondes) */}
+      {loading !== null && (
+        <div
+          key={info.slug}
+          role="status"
+          className="load-hint pointer-events-none absolute inset-x-0 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-3 text-fg-2"
+        >
+          <span className="load-track">
+            <span className="load-indeterminate" />
+          </span>
+          <span className="label">{t("chargement")}</span>
+        </div>
+      )}
+
       {/* Faisceau du projecteur, qui s'allume à l'ouverture */}
       <div aria-hidden className={cn("room-beam pointer-events-none absolute inset-0 -z-10 opacity-0", lit && "room-beam-on")} />
 
-      {/* Entrée cinématique : obturateur en deux volets et décompte d'amorce */}
-      <div
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-x-0 top-0 z-30 h-1/2 origin-top border-b border-fg-3/50 bg-ink-0 transition-transform duration-[1300ms] ease-out-cine",
-          lit && "scale-y-0",
-        )}
-      />
-      <div
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-0 z-30 h-1/2 origin-bottom border-t border-fg-3/50 bg-ink-0 transition-transform duration-[1300ms] ease-out-cine",
-          lit && "scale-y-0",
-        )}
-      />
-
       {/* Sélecteur de modèles */}
-      <nav aria-label="Choisir un modèle" className="relative z-20 pb-6 md:pb-8">
+      <nav aria-label="Choisir un modèle" className="relative z-20 pb-[calc(1.5rem+env(safe-area-inset-bottom))] md:pb-8">
         <div className="mx-auto flex max-w-content items-center gap-3 px-gutter">
           <button type="button" onClick={() => select(index - 1)} className="room-arrow" aria-label="Modèle précédent">
             ←

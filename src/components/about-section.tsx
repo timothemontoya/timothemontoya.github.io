@@ -33,7 +33,19 @@ export function AboutSection() {
           </p>
         </Reveal>
 
-        <div className="flex flex-col gap-14 md:col-span-4 md:col-start-9">
+        {/* Projet de mobilité et engagement civique : à gauche sous la présentation (après le parcours sur téléphone). */}
+        <div className="order-last flex flex-col gap-14 md:order-none md:col-span-7 md:row-start-2">
+          {(["mobilite", "engagement"] as const).map((key) => (
+            <Reveal key={key}>
+              <p className="label text-fg-3">{t(`apropos.${key}.titre`)}</p>
+              <p className="mt-5 max-w-2xl border-t border-line pt-6 text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.2] tracking-[-0.02em] text-pretty">
+                {t(`apropos.${key}.texte`)}
+              </p>
+            </Reveal>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-14 md:col-span-4 md:col-start-9 md:row-span-2 md:row-start-1">
           <Reveal delay={0.1}>
             <p className="label text-fg-3">{t("apropos.parcours.titre")}</p>
             <ol className="mt-6 flex flex-col">

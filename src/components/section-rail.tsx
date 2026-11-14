@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { t } from "@/content/textes";
 import { cn } from "@/lib/utils";
+import { useScrollToSection } from "./smooth-scroll";
 
 // Les étapes de la page d'accueil, dans l'ordre (mêmes numéros que le menu et les titres de section).
 const stops = [
@@ -20,6 +21,7 @@ const stops = [
  */
 export function SectionRail() {
   const [active, setActive] = useState(0);
+  const scrollTo = useScrollToSection();
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -45,6 +47,9 @@ export function SectionRail() {
           <li key={s.id}>
             <a
               href={`#${s.id}`}
+              onClick={(e) => {
+                if (scrollTo(i === 0 ? null : s.id)) e.preventDefault();
+              }}
               aria-label={s.label}
               aria-current={i === active ? "true" : undefined}
               className="group flex h-3 items-center justify-end gap-2"

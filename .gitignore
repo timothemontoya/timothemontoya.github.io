@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Fichiers temporaires de Blender (scripts d export)
 waveletNoiseTile.bin
+
+# Lanceur local (Windows)
+lancer-site.bat

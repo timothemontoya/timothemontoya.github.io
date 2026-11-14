@@ -194,7 +194,9 @@ function Field({ still }: { still: boolean }) {
 export function Backdrop() {
   const still = useReducedMotion();
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+    // Hauteur « grand écran » (100lvh) et non celle de la fenêtre : sur iPhone, le décor passe
+    // aussi sous la barre d'adresse flottante de Safari au lieu de laisser une bande unie.
+    <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[calc(100lvh+env(safe-area-inset-bottom))] min-h-dvh">
       <Canvas dpr={[1, 1.5]} flat gl={{ antialias: false, alpha: false, powerPreference: "low-power" }}>
         <Field still={still} />
       </Canvas>

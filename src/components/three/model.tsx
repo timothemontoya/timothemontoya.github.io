@@ -1,10 +1,88 @@
 "use client";
 
 import { useGLTF } from "@react-three/drei";
-import { useLayoutEffect, useMemo } from "react";
+import { useLayoutEffect, useMemo, useSyncExternalStore } from "react";
 import * as THREE from "three";
 import type { Finish } from "@/content/models";
 import { asset } from "@/lib/asset";
+
+// ─── Suivi du chargement des modèles ─────────────────────────────────────────
+// `progress` : part téléchargée du fichier (0 → 1). `ready` : modèle affiché au moins une fois.
+// Sert à l'écran de chargement et à la petite barre de la salle de projection.
+
+const progress = new Map<string, number>();
+const ready = new Set<string>();
+const pending = new Map<string, Promise<void>>();
+const listeners = new Set<() => void>();
+const notify = () => listeners.forEach((l) => l());
+const subscribe = (l: () => void) => {
+  listeners.add(l);
+  return () => listeners.delete(l);
+};
+
+/**
+ * Télécharge un modèle (une seule fois) et suit sa progression. Le chargeur de three.js
+ * regroupe les demandes d'un même fichier : celle de useGLTF rejoint celle-ci, rien n'est
+ * téléchargé deux fois. La promesse se résout quand le fichier est arrivé.
+ */
+export function fetchModel(url: string): Promise<void> {
+  const full = asset(url);
+  const known = pending.get(full);
+  if (known) return known;
+  const done = new Promise<void>((resolve) => {
+    const finish = () => {
+      progress.set(full, 1);
+      notify();
+      resolve();
+    };
+    if (!progress.has(full)) progress.set(full, 0);
+    new THREE.FileLoader()
+      .setResponseType("arraybuffer")
+      .load(
+        full,
+        finish,
+        (e) => {
+          if (!e.lengthComputable || !e.total) return;
+          progress.set(full, Math.min(0.99, e.loaded / e.total));
+          notify();
+        },
+        finish,
+      );
+  });
+  pending.set(full, done);
+  useGLTF.preload(full);
+  return done;
+}
+
+/** Résolue quand le modèle a été affiché (téléchargé, lu et monté dans la scène). */
+export function whenModelReady(url: string): Promise<void> {
+  const full = asset(url);
+  if (ready.has(full)) return Promise.resolve();
+  return new Promise((resolve) => {
+    const off = subscribe(() => {
+      if (!ready.has(full)) return;
+      off();
+      resolve();
+    });
+  });
+}
+
+/** État de chargement d'un modèle : `null` s'il est prêt, sinon la part téléchargée (ou -1 si inconnue). */
+export function useModelLoading(url: string): number | null {
+  const full = asset(url);
+  return useSyncExternalStore(
+    subscribe,
+    () => (ready.has(full) ? null : (progress.get(full) ?? -1)),
+    () => -1,
+  );
+}
+
+/** Part téléchargée d'un modèle (0 → 1), ou -1 tant qu'on ne la connaît pas. */
+export const modelProgress = (url: string) => {
+  const full = asset(url);
+  return ready.has(full) ? 1 : (progress.get(full) ?? -1);
+};
+export const subscribeModels = subscribe;
 
 /** Taille (diagonale de la boîte englobante) de tous les modèles une fois normalisés. */
 const TARGET_SIZE = 2.6;
@@ -63,6 +141,15 @@ export function Model({ url, studio, finish, ...props }: Props) {
     });
   }, [object, studio, finish]);
 
+  // Le modèle est dans la scène : la barre de chargement peut disparaître.
+  useLayoutEffect(() => {
+    const full = asset(url);
+    if (ready.has(full)) return;
+    ready.add(full);
+    progress.set(full, 1);
+    notify();
+  }, [url]);
+
   return (
     <group {...props}>
       <group scale={scale}>
@@ -71,5 +158,3 @@ export function Model({ url, studio, finish, ...props }: Props) {
     </group>
   );
 }
-
-export const preloadModel = (url: string) => useGLTF.preload(asset(url));

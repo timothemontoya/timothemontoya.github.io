@@ -124,7 +124,8 @@ body {
   }
 }
 
-/* Écran de chargement : tout en CSS, il se retire seul même sans JavaScript. */
+/* Écran de chargement : il se retire quand le site est prêt (classe « is-ready » posée par
+   preloader.tsx). Sans JavaScript, il se retire seul au bout de quelques secondes. */
 .preloader {
   position: fixed;
   inset: 0;
@@ -132,7 +133,11 @@ body {
   display: grid;
   place-items: center;
   background: var(--ink-0);
-  animation: preloader-out 0.7s var(--ease-out) 1.15s forwards;
+  animation: preloader-out 0.7s var(--ease-out) 8s forwards;
+}
+
+html.is-ready .preloader {
+  animation: preloader-out 0.7s var(--ease-out) forwards;
 }
 
 .preloader-bar {
@@ -150,16 +155,67 @@ body {
   border-radius: 999px;
   background: var(--fg);
   transform-origin: left;
-  animation: preloader-fill 1.05s var(--ease-out) forwards;
-}
-
-@keyframes preloader-fill {
-  from { transform: scaleX(0.04); }
-  to { transform: scaleX(1); }
+  transform: scaleX(0.04);
+  transition: transform 0.5s var(--ease-out);
 }
 
 @keyframes preloader-out {
   to { transform: translateY(-100%); visibility: hidden; }
+}
+
+/* Les animations d'entrée de l'accueil attendent la fin du chargement. */
+html:not(.is-ready) .rise,
+html:not(.is-ready) .hud-in {
+  animation-play-state: paused;
+}
+
+/* Petite barre de chargement (salle de projection, visionneuse). Elle n'apparaît qu'après
+   un court délai : rien ne clignote quand le fichier est déjà là. */
+.load-hint {
+  opacity: 0;
+  animation: hud-in 0.4s var(--ease-out) 0.25s forwards;
+}
+
+.load-track {
+  position: relative;
+  display: block;
+  width: 7rem;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.load-track > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  transform-origin: left;
+  transition: transform 0.3s var(--ease-out);
+}
+
+/* Taille inconnue : un segment qui fait des allers-retours. */
+.load-track > span.load-indeterminate {
+  width: 35%;
+  animation: load-slide 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes load-slide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(285%); }
+}
+
+/* Écrans tactiles : calage natif sur le début des grandes parties (salle, rendus).
+   Le navigateur l'intègre à l'inertie du doigt, sans à-coups ni retour en arrière.
+   (Sur ordinateur, c'est Lenis qui s'en charge : voir smooth-scroll.tsx.) */
+@media (pointer: coarse) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+  [data-snap] {
+    scroll-snap-align: start;
+  }
 }
 
 /* Accueil : chaque lettre du nom monte depuis sous la ligne. */
@@ -233,6 +289,7 @@ body {
   .hud-blink, .caret { animation: none; }
   .room-beam-on { animation: none; opacity: 1; }
   .preloader { display: none; }
+  .load-track > span.load-indeterminate { animation: none; width: 100%; opacity: 0.5; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;

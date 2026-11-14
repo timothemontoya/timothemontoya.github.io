@@ -2,8 +2,8 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { easing } from "maath";
-import { type MotionValue, motion, useScroll, useTransform } from "motion/react";
-import { Suspense, useRef } from "react";
+import { type MotionValue, motion, useMotionValueEvent, useScroll } from "motion/react";
+import { Suspense, useRef, useState } from "react";
 import * as THREE from "three";
 import { heroSlug, models } from "@/content/models";
 import { site } from "@/content/site";
@@ -67,6 +67,20 @@ function Flying({ progress, still }: { progress: MotionValue<number>; still: boo
   );
 }
 
+const ease = [0.2, 0.7, 0.1, 1] as const;
+
+/**
+ * Vrai tant que l'avancement du scroll est dans [from, to[. Les textes s'affichent alors
+ * en entier, avec un fondu en temps (et non au pixel près) : un geste rapide ne les fait
+ * pas clignoter, et il n'y a pas de position précise à trouver pour pouvoir les lire.
+ */
+function useBetween(progress: MotionValue<number>, from: number, to: number) {
+  const inside = (v: number) => v >= from && v < to;
+  const [on, setOn] = useState(() => inside(progress.get()));
+  useMotionValueEvent(progress, "change", (v) => setOn(inside(v)));
+  return on;
+}
+
 function Beat({
   progress,
   range,
@@ -74,14 +88,18 @@ function Beat({
   children,
 }: {
   progress: MotionValue<number>;
-  range: [number, number, number, number];
+  range: [number, number];
   className?: string;
   children: React.ReactNode;
 }) {
-  const opacity = useTransform(progress, range, [0, 1, 1, 0]);
-  const y = useTransform(progress, [range[0], range[1], range[2], range[3]], [40, 0, 0, -40]);
+  const on = useBetween(progress, range[0], range[1]);
   return (
-    <motion.div style={{ opacity, y }} className={className}>
+    <motion.div
+      initial={false}
+      animate={on ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      transition={{ duration: on ? 0.7 : 0.35, ease, delay: on ? 0.05 : 0 }}
+      className={className}
+    >
       {children}
     </motion.div>
   );
@@ -92,9 +110,8 @@ export function Hero() {
   const visible = useInView(section, "0px");
   const still = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const introOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0]);
-  const introY = useTransform(scrollYProgress, [0, 0.18], [0, -60]);
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+  const intro = useBetween(scrollYProgress, -1, 0.12);
+  const cue = useBetween(scrollYProgress, -1, 0.03);
 
   return (
     <section ref={section} id="accueil" aria-label="Présentation" className="relative h-[320vh]">
@@ -114,26 +131,30 @@ export function Hero() {
           </Suspense>
         </Canvas>
 
-        <motion.div style={{ opacity: introOpacity }} className="absolute inset-0">
+        <motion.div initial={false} animate={{ opacity: intro ? 1 : 0 }} transition={{ duration: 0.5 }} className="absolute inset-0">
           <HeroHud model={hero.name} year={hero.year} />
         </motion.div>
 
-        <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-content flex-col justify-end px-gutter pb-16 md:pb-20">
-          <motion.div style={{ opacity: introOpacity, y: introY }}>
-            <p className="hud-in label text-fg-2" style={{ animationDelay: "1.5s" }}>
+        <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-content flex-col justify-end px-gutter pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-20">
+          <motion.div
+            initial={false}
+            animate={intro ? { opacity: 1, y: 0 } : { opacity: 0, y: -40 }}
+            transition={{ duration: intro ? 0.7 : 0.4, ease }}
+          >
+            <p className="hud-in label text-fg-2" style={{ animationDelay: "0.4s" }}>
               {site.role} · {site.city}
             </p>
-            {/* Le nom monte lettre par lettre, juste après l'écran de chargement. */}
+            {/* Le nom monte lettre par lettre dès que l'écran de chargement se retire. */}
             <h1 className="display mt-5 text-[clamp(3.5rem,11vw,10rem)]" aria-label={site.name}>
               {site.name.split(" ").map((word, i) => (
                 <span key={i} className="block">
-                  <LetterRise text={word} delay={1.25 + i * 0.22} />
+                  <LetterRise text={word} delay={0.15 + i * 0.22} />
                 </span>
               ))}
             </h1>
           </motion.div>
 
-          <Beat progress={scrollYProgress} range={[0.22, 0.32, 0.5, 0.6]} className="absolute inset-x-gutter bottom-[22vh] max-w-xl">
+          <Beat progress={scrollYProgress} range={[0.2, 0.58]} className="absolute inset-x-gutter bottom-[22vh] max-w-xl">
             <p className="label text-accent">{t("accueil.phrase1.etiquette")}</p>
             <p className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-medium leading-[0.98] tracking-[-0.035em]">
               {t("accueil.phrase1")}
@@ -142,7 +163,7 @@ export function Hero() {
 
           <Beat
             progress={scrollYProgress}
-            range={[0.62, 0.72, 0.92, 1]}
+            range={[0.6, 2]}
             className="absolute bottom-[22vh] right-gutter max-w-xl text-right"
           >
             <p className="label text-accent">{t("accueil.phrase2.etiquette")}</p>
@@ -151,7 +172,12 @@ export function Hero() {
             </p>
           </Beat>
 
-          <motion.p style={{ opacity: cueOpacity }} className="dots absolute bottom-8 right-gutter text-sm text-fg-2">
+          <motion.p
+            initial={false}
+            animate={{ opacity: cue ? 1 : 0 }}
+            transition={{ duration: 0.4 }}
+            className="dots absolute bottom-[calc(2rem+env(safe-area-inset-bottom))] right-gutter text-sm text-fg-2"
+          >
             {t("accueil.defiler")}
           </motion.p>
         </div>

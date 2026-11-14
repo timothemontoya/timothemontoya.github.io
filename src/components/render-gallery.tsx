@@ -13,11 +13,37 @@ import { SectionLabel } from "./section-label";
 /** Toutes les vues à la suite, pour naviguer de l'une à l'autre en plein écran. */
 const slides = renders.flatMap((r, ri) => r.shots.map((shot, si) => ({ render: r, shot, ri, si })));
 
-function ShotMedia({ shot, alt, sizes, priority, className }: { shot: Shot; alt: string; sizes: string; priority?: boolean; className?: string }) {
+function ShotMedia({
+  shot,
+  alt,
+  sizes,
+  priority,
+  className,
+  onReady,
+}: {
+  shot: Shot;
+  alt: string;
+  sizes: string;
+  priority?: boolean;
+  className?: string;
+  /** Appelé quand l'image (ou la première image de la vidéo) est affichable. */
+  onReady?: () => void;
+}) {
   return shot.kind === "image" ? (
-    <Image src={asset(shot.src)} alt={alt} fill sizes={sizes} priority={priority} className={className} />
+    <Image src={asset(shot.src)} alt={alt} fill sizes={sizes} priority={priority} className={className} onLoad={onReady} onError={onReady} />
   ) : (
-    <video src={asset(shot.src)} aria-label={alt} className={className} autoPlay muted loop playsInline preload="metadata" />
+    <video
+      src={asset(shot.src)}
+      aria-label={alt}
+      className={className}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      onLoadedData={onReady}
+      onError={onReady}
+    />
   );
 }
 
@@ -26,6 +52,9 @@ function Lightbox({ at, instant, onClose, onMove }: { at: number; instant?: bool
   const { render, shot, si } = slides[at];
   const close = useRef<HTMLButtonElement>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
+  // Vue déjà affichée : tant que ce n'est pas celle en cours, une petite barre indique le chargement.
+  const [shownSrc, setShownSrc] = useState<string | null>(null);
+  const loading = shownSrc !== shot.src;
 
   // Sur téléphone : balayer à gauche ou à droite pour changer d'image.
   const onTouchEnd = (e: React.TouchEvent) => {
@@ -92,9 +121,23 @@ function Lightbox({ at, instant, onClose, onMove }: { at: number; instant?: bool
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.2, 0.7, 0.1, 1] }}
           >
-            <ShotMedia shot={shot} alt={`${render.title}, ${render.note}`} sizes="100vw" className="h-full w-full object-contain" />
+            <ShotMedia
+              shot={shot}
+              alt={`${render.title}, ${render.note}`}
+              sizes="100vw"
+              className="h-full w-full object-contain"
+              onReady={() => setShownSrc(shot.src)}
+            />
           </motion.div>
         </AnimatePresence>
+        {loading && (
+          <div key={shot.src} role="status" className="load-hint pointer-events-none absolute inset-x-0 bottom-4 flex flex-col items-center gap-2 text-fg-2">
+            <span className="load-track">
+              <span className="load-indeterminate" />
+            </span>
+            <span className="label">{t("chargement")}</span>
+          </div>
+        )}
         <button
           type="button"
           aria-label="Image précédente"
@@ -119,7 +162,7 @@ function Lightbox({ at, instant, onClose, onMove }: { at: number; instant?: bool
         </button>
       </div>
 
-      <div className="flex h-[76px] shrink-0 items-center justify-between gap-6 px-gutter">
+      <div className="flex h-[76px] shrink-0 items-center justify-between gap-6 px-gutter mb-[env(safe-area-inset-bottom)]">
         <p className="text-xl font-medium tracking-[-0.02em]">
           {render.title}
           {render.shots.length > 1 && (
@@ -241,13 +284,16 @@ export function RenderGallery() {
     <>
       <section id="rendus" data-snap aria-labelledby="rendus-titre">
         <RenderSpiral renders={featured} viewing={open === null ? null : slides[open].render.id} onOpen={openRender}>
-          <div className="mx-auto flex w-full max-w-content flex-wrap items-end justify-between gap-x-8 gap-y-4 px-gutter">
+          <div className="relative mx-auto flex w-full max-w-content flex-wrap items-end justify-between gap-x-8 gap-y-4 px-gutter">
             <div>
               <SectionLabel n="02">{t("rendus.etiquette")}</SectionLabel>
               <h2 id="rendus-titre" className="mt-4 text-[clamp(2.25rem,5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.035em] riso">
                 {t("rendus.titre")}
               </h2>
             </div>
+            <p className="text-[clamp(1.125rem,2vw,1.75rem)] font-medium leading-[0.95] tracking-[-0.03em] riso md:absolute md:bottom-0 md:left-1/2 md:-translate-x-1/2">
+              {t("rendus.glissez")}
+            </p>
             <p className="hidden max-w-sm text-fg-2 text-pretty md:block">{t("rendus.texte")}</p>
           </div>
         </RenderSpiral>

@@ -2,10 +2,12 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { site } from "@/content/site";
 import { t } from "@/content/textes";
 import { useReducedMotion } from "@/lib/use-media";
+import { useScrollToSection } from "./smooth-scroll";
 
 // Les numéros du menu (00, 01…) sont ceux affichés en tête de chaque section de l'accueil.
 const items = [
@@ -44,20 +46,34 @@ export function Nav() {
   }, [open]);
 
   const close = () => setOpen(false);
+  const pathname = usePathname();
+  const scrollTo = useScrollToSection();
+
+  // Lien vers l'accueil ou une de ses sections. Déjà sur l'accueil : on y défile nous-mêmes,
+  // de façon fiable (le routeur ne bouge pas si l'adresse n'a pas changé). Le menu plein écran
+  // cache le trajet : saut direct, puis le menu se replie sur la bonne section.
+  // Depuis une autre page : navigation normale, l'ancre est gérée par smooth-scroll.tsx.
+  const go = (e: React.MouseEvent, href: string) => {
+    if (pathname === "/" && href.startsWith("/")) {
+      const id = href.split("#")[1] ?? null;
+      if (scrollTo(id, { instant: open })) e.preventDefault();
+    }
+    close();
+  };
 
   return (
     <header>
       <nav aria-label="Navigation principale">
-        <div className="fixed inset-x-0 top-0 z-50 bg-gradient-to-b from-ink-0 via-ink-0/70 to-transparent">
+        <div className="fixed inset-x-0 top-0 z-50 bg-gradient-to-b pt-[env(safe-area-inset-top)] from-ink-0 via-ink-0/70 to-transparent">
           <div className="mx-auto flex max-w-content items-center justify-between px-gutter py-5">
-            <Link href="/" onClick={close} className="label text-fg" aria-label={`Accueil, ${site.name}`}>
+            <Link href="/" onClick={(e) => go(e, "/")} className="label text-fg" aria-label={`Accueil, ${site.name}`}>
               {site.name}
               <span className="text-accent">.</span>
             </Link>
             <div className="flex items-center gap-6 md:gap-10">
               <Link
                 href="/#contact"
-                onClick={close}
+                onClick={(e) => go(e, "/#contact")}
                 className="label hidden text-fg-2 transition-colors duration-300 hover:text-fg sm:block"
               >
                 {t("menu.parler")}
@@ -101,7 +117,7 @@ export function Nav() {
                       transition={{ duration: still ? 0 : 0.7, delay: still ? 0 : 0.15 + i * 0.06, ease }}
                       className="border-t border-line"
                     >
-                      <Link href={item.href} onClick={close} className="group flex items-baseline justify-between gap-6 py-3">
+                      <Link href={item.href} onClick={(e) => go(e, item.href)} className="group flex items-baseline justify-between gap-6 py-3">
                         <span className="text-[clamp(2.5rem,6.5vw,5rem)] font-medium lowercase leading-[1.05] tracking-[-0.045em] transition-[color,padding] duration-500 group-hover:pl-3 group-hover:text-accent">
                           {item.label}
                         </span>
